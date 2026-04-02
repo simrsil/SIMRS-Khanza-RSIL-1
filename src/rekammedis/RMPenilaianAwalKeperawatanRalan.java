@@ -550,7 +550,7 @@ public final class RMPenilaianAwalKeperawatanRalan extends javax.swing.JDialog {
         }
         tbRencanaEdukasi.setDefaultRenderer(Object.class, new WarnaTable());
         tabModeDetailKebutuhanEdukasi=new DefaultTableModel(null,new Object[]{
-                "Kode","Masalah Keperawatan"
+                "Kode","Kebutuhan Edukasi"
             }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
@@ -571,7 +571,7 @@ public final class RMPenilaianAwalKeperawatanRalan extends javax.swing.JDialog {
         }
         tbDetailKebutuhanEdukasi.setDefaultRenderer(Object.class, new WarnaTable());
          tabModeDetailRencanaEdukasi=new DefaultTableModel(null,new Object[]{
-                "Kode","Rencana Keperawatan"
+                "Kode","Rencana Edukasi"
             }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
