@@ -5840,6 +5840,11 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         NilaiResikoTotal.setEditable(false);
         NilaiResikoTotal.setFocusTraversalPolicyProvider(true);
         NilaiResikoTotal.setName("NilaiResikoTotal"); // NOI18N
+        NilaiResikoTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NilaiResikoTotalActionPerformed(evt);
+            }
+        });
         FormInput.add(NilaiResikoTotal);
         NilaiResikoTotal.setBounds(820, 2690, 40, 23);
 
@@ -9383,6 +9388,10 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
             }
         }
     }//GEN-LAST:event_tbKebutuhanEdukasiKeyReleased
+
+    private void NilaiResikoTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NilaiResikoTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NilaiResikoTotalActionPerformed
 
     /**
      * @param args the command line arguments
