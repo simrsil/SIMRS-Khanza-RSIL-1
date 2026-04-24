@@ -68,7 +68,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
     private volatile boolean ceksukses = false;
     private boolean[] pilih;
     private String[] kode, masalah;
-    private String masalahkeperawatan = "", finger = "";
+    private String masalahkeperawatan = "", finger = "", kebutuhanedukasi = "";
     private File file;
     private FileWriter fileWriter;
     private ObjectMapper mapper = new ObjectMapper();
@@ -6929,6 +6929,10 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Pemahaman Penyakit</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Pemahaman Pengobatan</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Pemahaman Perawatan</b></td>").append(
+                                        "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keyakinan & nilai</b></td>").append(
+                                        "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Keterbatasan Fisik</b></td>").append(
+                                        "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Hambatan Emosional</b></td>").append(
+                                        "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Motivasi</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Masalah Gizi 1</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>N.Gizi 1</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Masalah Gizi 2</b></td>").append(
@@ -6973,6 +6977,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Cara Transportasi Pulang</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Transportasi Digunakan</b></td>").append(
                                         "<td valign='middle' bgcolor='#FFFAFA' align='center'><b>Rencana Keperawatan Lainnya</b></td>").append(
+                                        
                                         "</tr>"
                                 );
                         for (i = 0; i < tabMode.getRowCount(); i++) {
@@ -7221,6 +7226,10 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 240).toString()).append("</td>").append(
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 241).toString()).append("</td>").append(
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 242).toString()).append("</td>").append(
+                                    "<td valign='top'>").append(tbObat.getValueAt(i, 243).toString()).append("</td>").append(
+                                    "<td valign='top'>").append(tbObat.getValueAt(i, 244).toString()).append("</td>").append(
+                                    "<td valign='top'>").append(tbObat.getValueAt(i, 245).toString()).append("</td>").append(
+                                    "<td valign='top'>").append(tbObat.getValueAt(i, 246).toString()).append("</td>").append(
                                     "</tr>");
                         }
                         f = new File("RMPenilaianAwalKeperawatanRanapNeonatus.html");
@@ -7490,7 +7499,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                         for (i = 0; i < tabMode.getRowCount(); i++) {
                             htmlContent.append(
                                     "<tr class='isi'>").append(
-                                            "<td valign='top'>").append(tbObat.getValueAt(i, 0).toString()).append("</td>").append(
+                                    "<td valign='top'>").append(tbObat.getValueAt(i, 0).toString()).append("</td>").append(
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 1).toString()).append("</td>").append(
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 2).toString()).append("</td>").append(
                                     "<td valign='top'>").append(tbObat.getValueAt(i, 3).toString()).append("</td>").append(
@@ -7987,6 +7996,58 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                 System.out.println("Notif : " + e);
             }
             param.put("rencana", masalahkeperawatan);
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi,master_kebutuhan_edukasi_komunikasi.kebutuhan_edukasi from master_kebutuhan_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi on penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
+                        + "where penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.kd_kebutuhan_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("kebutuhan_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            param.put("kebutuhan_edukasi", kebutuhanedukasi);
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_rencana_edukasi_komunikasi.kd_rencana_edukasi,master_rencana_edukasi_komunikasi.rencana_edukasi from master_rencana_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_ranap_neonatus_rencana_edukasi on penilaian_awal_keperawatan_ranap_neonatus_rencana_edukasi.kd_rencana_edukasi=master_rencana_edukasi_komunikasi.kd_rencana_edukasi "
+                        + "where penilaian_awal_keperawatan_ranap_neonatus_rencana_edukasi.no_rawat=? order by penilaian_awal_keperawatan_ranap_neonatus_rencana_edukasi.kd_rencana_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("rencana_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            param.put("rencana_edukasi", kebutuhanedukasi);
             Valid.MyReportqry("rptCetakPenilaianAwalKeperawatanRanapNeonantus.jasper", "report", "::[ Laporan Pengkajian Awal Keperawatan Rawat Inap Neonatus ]::",
                     "select penilaian_awal_keperawatan_ranap_neonatus.no_rawat,penilaian_awal_keperawatan_ranap_neonatus.tanggal,penilaian_awal_keperawatan_ranap_neonatus.asal_pasien,penilaian_awal_keperawatan_ranap_neonatus.cara_masuk,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.diperoleh_dari,penilaian_awal_keperawatan_ranap_neonatus.hubungan_dengan_pasien,penilaian_awal_keperawatan_ranap_neonatus.keluhan_utama,penilaian_awal_keperawatan_ranap_neonatus.prenatal_g,"
@@ -8035,7 +8096,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                     + "penilaian_awal_keperawatan_ranap_neonatus.bahasa_sehari_hari,penilaian_awal_keperawatan_ranap_neonatus.kemampuan_bacatulis,penilaian_awal_keperawatan_ranap_neonatus.butuh_penterjemah,penilaian_awal_keperawatan_ranap_neonatus.butuh_penterjemah_keterangan,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.terdapat_hambatan_belajar,penilaian_awal_keperawatan_ranap_neonatus.hambatan_belajar,penilaian_awal_keperawatan_ranap_neonatus.hambatan_belajar_keterangan,penilaian_awal_keperawatan_ranap_neonatus.hambatan_cara_bicara,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.hambatan_bahasa_isyarat,penilaian_awal_keperawatan_ranap_neonatus.cara_belajar_disukai,penilaian_awal_keperawatan_ranap_neonatus.kesediaan_menerima_informasi,penilaian_awal_keperawatan_ranap_neonatus.kesediaan_menerima_informasi_keterangan,"
-                    + "penilaian_awal_keperawatan_ranap_neonatus.pemahaman_nutrisi,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_penyakit,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_pengobatan,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_perawatan,"
+                    + "penilaian_awal_keperawatan_ranap_neonatus.pemahaman_nutrisi,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_penyakit,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_pengobatan,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_perawatan,penilaian_awal_keperawatan_ranap_neonatus.nilai_keyakinan,penilaian_awal_keperawatan_ranap_neonatus.keterbatasan_fisik,penilaian_awal_keperawatan_ranap_neonatus.hambatan_emosional,penilaian_awal_keperawatan_ranap_neonatus.motivasi,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi1,penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi1,penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi2,penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi2,penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi3,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi3,penilaian_awal_keperawatan_ranap_neonatus.totalgizi,penilaian_awal_keperawatan_ranap_neonatus.keterangan_gizi,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala1,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_nilai1,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala2,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_nilai2,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala3,"
@@ -9306,7 +9367,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
     }//GEN-LAST:event_BtnAllKebutuhanEdukasiKeyPressed
 
     private void BtnCariKebutuhanEdukasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariKebutuhanEdukasiActionPerformed
-        runBackground(() ->tampilKebutuhanEdukasi2());
+        runBackground(() -> tampilKebutuhanEdukasi2());
     }//GEN-LAST:event_BtnCariKebutuhanEdukasiActionPerformed
 
     private void BtnCariKebutuhanEdukasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKebutuhanEdukasiKeyPressed
@@ -10105,7 +10166,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                     + "penilaian_awal_keperawatan_ranap_neonatus.terdapat_hambatan_belajar,penilaian_awal_keperawatan_ranap_neonatus.hambatan_belajar,penilaian_awal_keperawatan_ranap_neonatus.hambatan_belajar_keterangan,penilaian_awal_keperawatan_ranap_neonatus.hambatan_cara_bicara,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.hambatan_bahasa_isyarat,penilaian_awal_keperawatan_ranap_neonatus.cara_belajar_disukai,penilaian_awal_keperawatan_ranap_neonatus.kesediaan_menerima_informasi,penilaian_awal_keperawatan_ranap_neonatus.kesediaan_menerima_informasi_keterangan,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.pemahaman_nutrisi,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_penyakit,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_pengobatan,penilaian_awal_keperawatan_ranap_neonatus.pemahaman_perawatan,"
-                    + "penilaian_awal_keperawatan_ranap_neonatus.nilai_keyakinan,penilaian_awal_keperawatan_ranap_neonatus.keterbatasan_fisik,penilaian_awal_keperawatan_ranap_neonatus.hambatan_emosional,penilaian_awal_keperawatan_ranap_neonatus.motivasi,"     
+                    + "penilaian_awal_keperawatan_ranap_neonatus.nilai_keyakinan,penilaian_awal_keperawatan_ranap_neonatus.keterbatasan_fisik,penilaian_awal_keperawatan_ranap_neonatus.hambatan_emosional,penilaian_awal_keperawatan_ranap_neonatus.motivasi,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi1,penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi1,penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi2,penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi2,penilaian_awal_keperawatan_ranap_neonatus.masalah_gizi3,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.nilai_gizi3,penilaian_awal_keperawatan_ranap_neonatus.totalgizi,penilaian_awal_keperawatan_ranap_neonatus.keterangan_gizi,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala1,"
                     + "penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_nilai1,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala2,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_nilai2,penilaian_awal_keperawatan_ranap_neonatus.penilaian_humptydumpty_skala3,"
@@ -10175,7 +10236,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                         rs.getString("pendidikan"), rs.getString("pembayaran"), rs.getString("tinggal_bersama"), rs.getString("tinggal_bersama_keterangan"), rs.getString("hubungan_keluarga"), rs.getString("respon_emosi"), rs.getString("bahasa_sehari_hari"),
                         rs.getString("kemampuan_bacatulis"), rs.getString("butuh_penterjemah"), rs.getString("butuh_penterjemah_keterangan"), rs.getString("terdapat_hambatan_belajar"), rs.getString("hambatan_belajar"), rs.getString("hambatan_belajar_keterangan"),
                         rs.getString("hambatan_cara_bicara"), rs.getString("hambatan_bahasa_isyarat"), rs.getString("cara_belajar_disukai"), rs.getString("kesediaan_menerima_informasi"), rs.getString("kesediaan_menerima_informasi_keterangan"),
-                        rs.getString("pemahaman_nutrisi"), rs.getString("pemahaman_penyakit"), rs.getString("pemahaman_pengobatan"), rs.getString("pemahaman_perawatan"),rs.getString("nilai_keyakinan"),rs.getString("keterbatasan_fisik"),rs.getString("hambatan_emosional"),rs.getString("motivasi") ,rs.getString("masalah_gizi1"), rs.getString("nilai_gizi1"), rs.getString("masalah_gizi2"),
+                        rs.getString("pemahaman_nutrisi"), rs.getString("pemahaman_penyakit"), rs.getString("pemahaman_pengobatan"), rs.getString("pemahaman_perawatan"), rs.getString("nilai_keyakinan"), rs.getString("keterbatasan_fisik"), rs.getString("hambatan_emosional"), rs.getString("motivasi"), rs.getString("masalah_gizi1"), rs.getString("nilai_gizi1"), rs.getString("masalah_gizi2"),
                         rs.getString("nilai_gizi2"), rs.getString("masalah_gizi3"), rs.getString("nilai_gizi3"), rs.getString("totalgizi"), rs.getString("keterangan_gizi"), rs.getString("penilaian_humptydumpty_skala1"), rs.getString("penilaian_humptydumpty_nilai1"),
                         rs.getString("penilaian_humptydumpty_skala2"), rs.getString("penilaian_humptydumpty_nilai2"), rs.getString("penilaian_humptydumpty_skala3"), rs.getString("penilaian_humptydumpty_nilai3"), rs.getString("penilaian_humptydumpty_skala4"),
                         rs.getString("penilaian_humptydumpty_nilai4"), rs.getString("penilaian_humptydumpty_skala5"), rs.getString("penilaian_humptydumpty_nilai5"), rs.getString("penilaian_humptydumpty_skala6"), rs.getString("penilaian_humptydumpty_nilai6"),
@@ -10699,7 +10760,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
             Rencana.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 246).toString());
             Valid.tabelKosong(tabModeMasalah);
             Valid.tabelKosong(tabModeRencana);
-             Valid.tabelKosong(tabModeKebutuhanEdukasi);
+            Valid.tabelKosong(tabModeKebutuhanEdukasi);
             Valid.tabelKosong(tabModeRencanaEdukasi);
             for (i = 0; i < tbMasalahDetail.getRowCount(); i++) {
                 tabModeMasalah.addRow(new Object[]{
@@ -10881,7 +10942,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
                         "select master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi,master_kebutuhan_edukasi_komunikasi.kebutuhan_edukasi from master_kebutuhan_edukasi_komunikasi "
                         + "inner join penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi on penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
                         + "where penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_ranap_neonatus_kebutuhan_edukasi.kd_kebutuhan_edukasi");
-                try { 
+                try {
                     ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                     rs = ps.executeQuery();
                     while (rs.next()) {
@@ -11696,7 +11757,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
             VernicKaseosa.getSelectedItem().toString(), KeteranganVernicKaseosa.getText(), Turgor.getSelectedItem().toString(), Lanugo.getSelectedItem().toString(), Kulit.getSelectedItem().toString(), RisikoDekubitas.getSelectedItem().toString(), Reproduksi.getSelectedItem().toString(), KeteranganReproduksi.getText(), RekoilTelinga.getSelectedItem().toString(), KeteranganRekoilTelinga.getText(), Lengan.getSelectedItem().toString(), KeteranganLengan.getText(), Tungkai.getSelectedItem().toString(), KeteranganTungkai.getText(), GarisTelapakKaki.getSelectedItem().toString(), KondisiPsikologis.getSelectedItem().toString(),
             GangguanJiwa.getSelectedItem().toString(), MenerimaKondisiBayi.getSelectedItem().toString(), StatusMenikah.getSelectedItem().toString(), MasalahPernikahan.getSelectedItem().toString(), KeteranganMasalahPernikahan.getText(), Pekerjaan.getText(), Agama.getText(), NilaiKepercayaan.getSelectedItem().toString(), KeteranganNilaiKepercayaan.getText(), Suku.getText(), Pendidikan.getText(), Pembayaran.getText(), TinggalBersama.getSelectedItem().toString(), KeteranganTinggalBersama.getText(), HubunganAnggotaKeluarga.getSelectedItem().toString(), ResponEmosi.getSelectedItem().toString(), BahasaSehari.getText(),
             KemampuanBacaTulis.getSelectedItem().toString(), ButuhPenerjemah.getSelectedItem().toString(), KeteranganButuhPenerjemah.getText(), TerdapatHambatanBelajar.getSelectedItem().toString(), HambatanBelajar.getSelectedItem().toString(), KeteranganHambatanBelajar.getText(), HambatanCaraBicara.getSelectedItem().toString(), HambatanBahasaIsyarat.getSelectedItem().toString(), CaraBelajarDisukai.getSelectedItem().toString(), KesediaanMenerimaInformasi.getSelectedItem().toString(), KeteranganKesediaanMenerimaInformasi.getText(), PemahamanNutrisi.getSelectedItem().toString(), PemahamanPenyakit.getSelectedItem().toString(),
-            PemahamanPengobatan.getSelectedItem().toString(), PemahamanPerawatan.getSelectedItem().toString(), KeyakinanNilai.getSelectedItem().toString(), KeterbatasanFisik.getSelectedItem().toString(), HambatanEmosional.getSelectedItem().toString(), Motivasi.getSelectedItem().toString(), SG1.getSelectedItem().toString(), NilaiGizi1.getText(), SG2.getSelectedItem().toString(), NilaiGizi2.getText(), SG3.getSelectedItem().toString(), NilaiGizi3.getText(), TotalNilaiGizi.getText(), KeteranganSkriningGizi.getText(), SkalaResiko1.getSelectedItem().toString(), NilaiResiko1.getText(), SkalaResiko2.getSelectedItem().toString(), 
+            PemahamanPengobatan.getSelectedItem().toString(), PemahamanPerawatan.getSelectedItem().toString(), KeyakinanNilai.getSelectedItem().toString(), KeterbatasanFisik.getSelectedItem().toString(), HambatanEmosional.getSelectedItem().toString(), Motivasi.getSelectedItem().toString(), SG1.getSelectedItem().toString(), NilaiGizi1.getText(), SG2.getSelectedItem().toString(), NilaiGizi2.getText(), SG3.getSelectedItem().toString(), NilaiGizi3.getText(), TotalNilaiGizi.getText(), KeteranganSkriningGizi.getText(), SkalaResiko1.getSelectedItem().toString(), NilaiResiko1.getText(), SkalaResiko2.getSelectedItem().toString(),
             NilaiResiko2.getText(), SkalaResiko3.getSelectedItem().toString(), NilaiResiko3.getText(), SkalaResiko4.getSelectedItem().toString(), NilaiResiko4.getText(),
             SkalaResiko5.getSelectedItem().toString(), NilaiResiko5.getText(), SkalaResiko6.getSelectedItem().toString(), NilaiResiko6.getText(), SkalaResiko7.getSelectedItem().toString(), NilaiResiko7.getText(), NilaiResikoTotal.getText(), KeteranganTingkatRisiko.getText(), SkalaNIPS1.getSelectedItem().toString(), NilaiNIPS1.getText(), SkalaNIPS2.getSelectedItem().toString(), NilaiNIPS2.getText(), SkalaNIPS3.getSelectedItem().toString(), NilaiNIPS3.getText(), SkalaNIPS4.getSelectedItem().toString(), NilaiNIPS4.getText(), SkalaNIPS5.getSelectedItem().toString(), NilaiNIPS5.getText(), TotalNIPS.getText(),
             KeteranganPenilaianNyeri.getText(), InformasiPerencanaanPulang.getSelectedItem().toString(), LamaRatarata.getText(), Valid.SetTgl(TanggalPulang.getSelectedItem() + ""), KondisiPulang.getText(), PerawatanLanjutan.getText(), CaraTransportasiPulang.getSelectedItem().toString(), TransportasiYangDigunakan.getSelectedItem().toString(), Rencana.getText(), KdPetugas.getText(), KdPetugas2.getText(), KdDokter.getText()
