@@ -58,7 +58,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private volatile boolean ceksukses = false;
     private StringBuilder htmlContent;
-    private String finger = "";
+    private String finger = "",kebutuhanedukasi = "";
     private File file;
     private FileWriter fileWriter;
     private ObjectMapper mapper = new ObjectMapper();
@@ -3351,7 +3351,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         jSeparator6.setBounds(20, 1900, 880, 1);
 
         jLabel141.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel141.setText("VI. PENGKAJIAN RESIKO JATUH");
+        jLabel141.setText("VIII. PENGKAJIAN RESIKO JATUH");
         jLabel141.setName("jLabel141"); // NOI18N
         FormInput.add(jLabel141);
         jLabel141.setBounds(30, 1900, 380, 23);
@@ -3459,7 +3459,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         jSeparator7.setBounds(20, 2030, 880, 1);
 
         jLabel149.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel149.setText("VII. SKRINING GIZI");
+        jLabel149.setText("IX. SKRINING GIZI");
         jLabel149.setName("jLabel149"); // NOI18N
         FormInput.add(jLabel149);
         jLabel149.setBounds(30, 2030, 380, 23);
@@ -3559,7 +3559,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         TotalHasil.setBounds(800, 2110, 80, 23);
 
         jLabel155.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel155.setText("VIII. PENGKAJIAN TINGKAT NYERI");
+        jLabel155.setText("X. PENGKAJIAN TINGKAT NYERI");
         jLabel155.setName("jLabel155"); // NOI18N
         FormInput.add(jLabel155);
         jLabel155.setBounds(30, 2140, 380, 23);
@@ -3842,7 +3842,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         jSeparator16.setBounds(10, 2340, 880, 1);
 
         jLabel272.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel272.setText("VIII. PERENCANAAN PULANG (DISCHARGE PLANNING)");
+        jLabel272.setText("XI. PERENCANAAN PULANG (DISCHARGE PLANNING)");
         jLabel272.setName("jLabel272"); // NOI18N
         FormInput.add(jLabel272);
         jLabel272.setBounds(30, 2340, 380, 23);
@@ -3995,7 +3995,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         jSeparator11.setBounds(20, 1410, 880, 1);
 
         jLabel214.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel214.setText("IV. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
+        jLabel214.setText("VII. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
         jLabel214.setName("jLabel214"); // NOI18N
         FormInput.add(jLabel214);
         jLabel214.setBounds(30, 1650, 400, 23);
@@ -4518,7 +4518,7 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
         jLabel276.setBounds(90, 1580, 100, 23);
 
         jLabel277.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel277.setText("IV. KEBUTUHAN KOMUNIKASI DAN BELAJAR/EDUKASI ");
+        jLabel277.setText("VI. KEBUTUHAN KOMUNIKASI DAN BELAJAR/EDUKASI ");
         jLabel277.setName("jLabel277"); // NOI18N
         FormInput.add(jLabel277);
         jLabel277.setBounds(10, 1410, 400, 23);
@@ -5742,7 +5742,60 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
             } catch (Exception e) {
                 System.out.println("Notif : " + e);
             }
-
+            
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi,master_kebutuhan_edukasi_komunikasi.kebutuhan_edukasi from master_kebutuhan_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
+                        + "where penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("kebutuhan_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            
+            param.put("kebutuhan_edukasi", kebutuhanedukasi);
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_rencana_edukasi_komunikasi.kd_rencana_edukasi,master_rencana_edukasi_komunikasi.rencana_edukasi from master_rencana_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi=master_rencana_edukasi_komunikasi.kd_rencana_edukasi "
+                        + "where penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("rencana_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            param.put("rencana_edukasi", kebutuhanedukasi);
             Valid.MyReportqry("rptCetakPenilaianAwalKebidananRalan.jasper", "report", "::[ Laporan Pengkajian Awal Ralan Kebidanan & Kandungan ]::",
                     "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,pasien.agama,bahasa_pasien.nama_bahasa,cacat_fisik.nama_cacat,penilaian_awal_keperawatan_kebidanan.tanggal,"
                     + "penilaian_awal_keperawatan_kebidanan.informasi,penilaian_awal_keperawatan_kebidanan.td,penilaian_awal_keperawatan_kebidanan.nadi,penilaian_awal_keperawatan_kebidanan.rr,penilaian_awal_keperawatan_kebidanan.suhu,penilaian_awal_keperawatan_kebidanan.bb,"
@@ -5761,12 +5814,17 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
                     + "penilaian_awal_keperawatan_kebidanan.ket_komplikasi,penilaian_awal_keperawatan_kebidanan.berhenti,penilaian_awal_keperawatan_kebidanan.alasan,penilaian_awal_keperawatan_kebidanan.alat_bantu,penilaian_awal_keperawatan_kebidanan.ket_bantu,"
                     + "penilaian_awal_keperawatan_kebidanan.prothesa,penilaian_awal_keperawatan_kebidanan.ket_pro,penilaian_awal_keperawatan_kebidanan.adl,penilaian_awal_keperawatan_kebidanan.status_psiko,penilaian_awal_keperawatan_kebidanan.ket_psiko,"
                     + "penilaian_awal_keperawatan_kebidanan.hub_keluarga,penilaian_awal_keperawatan_kebidanan.tinggal_dengan,penilaian_awal_keperawatan_kebidanan.ket_tinggal,penilaian_awal_keperawatan_kebidanan.ekonomi,penilaian_awal_keperawatan_kebidanan.budaya,"
-                    + "penilaian_awal_keperawatan_kebidanan.ket_budaya,penilaian_awal_keperawatan_kebidanan.edukasi,penilaian_awal_keperawatan_kebidanan.ket_edukasi,penilaian_awal_keperawatan_kebidanan.berjalan_a,penilaian_awal_keperawatan_kebidanan.berjalan_b,"
+                    + "penilaian_awal_keperawatan_kebidanan.ket_budaya,penilaian_awal_keperawatan_kebidanan.edukasi,penilaian_awal_keperawatan_kebidanan.ket_edukasi,penilaian_awal_keperawatan_kebidanan.kemampuan_baca_tulis,penilaian_awal_keperawatan_kebidanan.butuh_penerjemah,penilaian_awal_keperawatan_kebidanan.keterangan_butuh_penerjemah,"
+                    + "penilaian_awal_keperawatan_kebidanan.terdapat_hambatan_belajar,penilaian_awal_keperawatan_kebidanan.hambatan_belajar,penilaian_awal_keperawatan_kebidanan.keterangan_hambatan_belajar,penilaian_awal_keperawatan_kebidanan.hambatan_cara_bicara,"
+                    + "penilaian_awal_keperawatan_kebidanan.hambatan_bahasa_isyarat,penilaian_awal_keperawatan_kebidanan.cara_belajar_disukai,penilaian_awal_keperawatan_kebidanan.kesediaan_menerima_informasi,penilaian_awal_keperawatan_kebidanan.ket_kesediaan_menerima_informasi,"
+                    + "penilaian_awal_keperawatan_kebidanan.pemahaman_nutrisi,penilaian_awal_keperawatan_kebidanan.pemahaman_penyakit,penilaian_awal_keperawatan_kebidanan.pemahaman_pengobatan,penilaian_awal_keperawatan_kebidanan.pemahaman_perawatan,"
+                    + "penilaian_awal_keperawatan_kebidanan.keyakinan_nilai,penilaian_awal_keperawatan_kebidanan.keterbatasan_fisik,penilaian_awal_keperawatan_kebidanan.hambatan_emosional,penilaian_awal_keperawatan_kebidanan.motivasi,penilaian_awal_keperawatan_kebidanan.berjalan_a,penilaian_awal_keperawatan_kebidanan.berjalan_b,"
                     + "penilaian_awal_keperawatan_kebidanan.berjalan_c,penilaian_awal_keperawatan_kebidanan.hasil,penilaian_awal_keperawatan_kebidanan.lapor,penilaian_awal_keperawatan_kebidanan.ket_lapor,penilaian_awal_keperawatan_kebidanan.sg1,"
                     + "penilaian_awal_keperawatan_kebidanan.nilai1,penilaian_awal_keperawatan_kebidanan.sg2,penilaian_awal_keperawatan_kebidanan.nilai2,penilaian_awal_keperawatan_kebidanan.total_hasil,penilaian_awal_keperawatan_kebidanan.nyeri,"
                     + "penilaian_awal_keperawatan_kebidanan.provokes,penilaian_awal_keperawatan_kebidanan.ket_provokes,penilaian_awal_keperawatan_kebidanan.quality,penilaian_awal_keperawatan_kebidanan.ket_quality,penilaian_awal_keperawatan_kebidanan.lokasi,"
                     + "penilaian_awal_keperawatan_kebidanan.menyebar,penilaian_awal_keperawatan_kebidanan.skala_nyeri,penilaian_awal_keperawatan_kebidanan.durasi,penilaian_awal_keperawatan_kebidanan.nyeri_hilang,penilaian_awal_keperawatan_kebidanan.ket_nyeri,"
-                    + "penilaian_awal_keperawatan_kebidanan.pada_dokter,penilaian_awal_keperawatan_kebidanan.ket_dokter,penilaian_awal_keperawatan_kebidanan.masalah,penilaian_awal_keperawatan_kebidanan.tindakan,penilaian_awal_keperawatan_kebidanan.nip,petugas.nama "
+                    + "penilaian_awal_keperawatan_kebidanan.pada_dokter,penilaian_awal_keperawatan_kebidanan.ket_dokter,penilaian_awal_keperawatan_kebidanan.informasi_perencanaan_pulang,penilaian_awal_keperawatan_kebidanan.lama_ratarata,penilaian_awal_keperawatan_kebidanan.tanggal_pulang,"
+                    + "penilaian_awal_keperawatan_kebidanan.kondisi_saat_pulang,penilaian_awal_keperawatan_kebidanan.perawatan_lanjutan,penilaian_awal_keperawatan_kebidanan.cara_transportasi,penilaian_awal_keperawatan_kebidanan.transportasi_digunakan,penilaian_awal_keperawatan_kebidanan.masalah,penilaian_awal_keperawatan_kebidanan.tindakan,penilaian_awal_keperawatan_kebidanan.nip,petugas.nama "
                     + "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "inner join penilaian_awal_keperawatan_kebidanan on reg_periksa.no_rawat=penilaian_awal_keperawatan_kebidanan.no_rawat "
                     + "inner join petugas on penilaian_awal_keperawatan_kebidanan.nip=petugas.nip "
@@ -5791,12 +5849,17 @@ public final class RMPenilaianAwalKeperawatanKebidanan extends javax.swing.JDial
                     + "penilaian_awal_keperawatan_kebidanan.ket_komplikasi,penilaian_awal_keperawatan_kebidanan.berhenti,penilaian_awal_keperawatan_kebidanan.alasan,penilaian_awal_keperawatan_kebidanan.alat_bantu,penilaian_awal_keperawatan_kebidanan.ket_bantu,"
                     + "penilaian_awal_keperawatan_kebidanan.prothesa,penilaian_awal_keperawatan_kebidanan.ket_pro,penilaian_awal_keperawatan_kebidanan.adl,penilaian_awal_keperawatan_kebidanan.status_psiko,penilaian_awal_keperawatan_kebidanan.ket_psiko,"
                     + "penilaian_awal_keperawatan_kebidanan.hub_keluarga,penilaian_awal_keperawatan_kebidanan.tinggal_dengan,penilaian_awal_keperawatan_kebidanan.ket_tinggal,penilaian_awal_keperawatan_kebidanan.ekonomi,penilaian_awal_keperawatan_kebidanan.budaya,"
-                    + "penilaian_awal_keperawatan_kebidanan.ket_budaya,penilaian_awal_keperawatan_kebidanan.edukasi,penilaian_awal_keperawatan_kebidanan.ket_edukasi,penilaian_awal_keperawatan_kebidanan.berjalan_a,penilaian_awal_keperawatan_kebidanan.berjalan_b,"
+                    + "penilaian_awal_keperawatan_kebidanan.ket_budaya,penilaian_awal_keperawatan_kebidanan.edukasi,penilaian_awal_keperawatan_kebidanan.ket_edukasi,penilaian_awal_keperawatan_kebidanan.kemampuan_baca_tulis,penilaian_awal_keperawatan_kebidanan.butuh_penerjemah,penilaian_awal_keperawatan_kebidanan.keterangan_butuh_penerjemah,\n"
+                    + "penilaian_awal_keperawatan_kebidanan.terdapat_hambatan_belajar,penilaian_awal_keperawatan_kebidanan.hambatan_belajar,penilaian_awal_keperawatan_kebidanan.keterangan_hambatan_belajar,penilaian_awal_keperawatan_kebidanan.hambatan_cara_bicara,"
+                    + "penilaian_awal_keperawatan_kebidanan.hambatan_bahasa_isyarat,penilaian_awal_keperawatan_kebidanan.cara_belajar_disukai,penilaian_awal_keperawatan_kebidanan.kesediaan_menerima_informasi,penilaian_awal_keperawatan_kebidanan.ket_kesediaan_menerima_informasi,"
+                    + "penilaian_awal_keperawatan_kebidanan.pemahaman_nutrisi,penilaian_awal_keperawatan_kebidanan.pemahaman_penyakit,penilaian_awal_keperawatan_kebidanan.pemahaman_pengobatan,penilaian_awal_keperawatan_kebidanan.pemahaman_perawatan,"
+                    + "penilaian_awal_keperawatan_kebidanan.keyakinan_nilai,penilaian_awal_keperawatan_kebidanan.keterbatasan_fisik,penilaian_awal_keperawatan_kebidanan.hambatan_emosional,penilaian_awal_keperawatan_kebidanan.motivasi,penilaian_awal_keperawatan_kebidanan.berjalan_a,penilaian_awal_keperawatan_kebidanan.berjalan_b,"
                     + "penilaian_awal_keperawatan_kebidanan.berjalan_c,penilaian_awal_keperawatan_kebidanan.hasil,penilaian_awal_keperawatan_kebidanan.lapor,penilaian_awal_keperawatan_kebidanan.ket_lapor,penilaian_awal_keperawatan_kebidanan.sg1,"
                     + "penilaian_awal_keperawatan_kebidanan.nilai1,penilaian_awal_keperawatan_kebidanan.sg2,penilaian_awal_keperawatan_kebidanan.nilai2,penilaian_awal_keperawatan_kebidanan.total_hasil,penilaian_awal_keperawatan_kebidanan.nyeri,"
                     + "penilaian_awal_keperawatan_kebidanan.provokes,penilaian_awal_keperawatan_kebidanan.ket_provokes,penilaian_awal_keperawatan_kebidanan.quality,penilaian_awal_keperawatan_kebidanan.ket_quality,penilaian_awal_keperawatan_kebidanan.lokasi,"
                     + "penilaian_awal_keperawatan_kebidanan.menyebar,penilaian_awal_keperawatan_kebidanan.skala_nyeri,penilaian_awal_keperawatan_kebidanan.durasi,penilaian_awal_keperawatan_kebidanan.nyeri_hilang,penilaian_awal_keperawatan_kebidanan.ket_nyeri,"
-                    + "penilaian_awal_keperawatan_kebidanan.pada_dokter,penilaian_awal_keperawatan_kebidanan.ket_dokter,penilaian_awal_keperawatan_kebidanan.masalah,penilaian_awal_keperawatan_kebidanan.tindakan,penilaian_awal_keperawatan_kebidanan.nip,petugas.nama "
+                    + "penilaian_awal_keperawatan_kebidanan.pada_dokter,penilaian_awal_keperawatan_kebidanan.ket_dokter,penilaian_awal_keperawatan_kebidanan.informasi_perencanaan_pulang,penilaian_awal_keperawatan_kebidanan.lama_ratarata,penilaian_awal_keperawatan_kebidanan.tanggal_pulang,"
+                    + "penilaian_awal_keperawatan_kebidanan.kondisi_saat_pulang,penilaian_awal_keperawatan_kebidanan.perawatan_lanjutan,penilaian_awal_keperawatan_kebidanan.cara_transportasi,penilaian_awal_keperawatan_kebidanan.transportasi_digunakan,penilaian_awal_keperawatan_kebidanan.masalah,penilaian_awal_keperawatan_kebidanan.tindakan,penilaian_awal_keperawatan_kebidanan.nip,petugas.nama "
                     + "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
                     + "inner join penilaian_awal_keperawatan_kebidanan on reg_periksa.no_rawat=penilaian_awal_keperawatan_kebidanan.no_rawat "
                     + "inner join petugas on penilaian_awal_keperawatan_kebidanan.nip=petugas.nip "
