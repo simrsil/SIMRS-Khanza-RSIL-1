@@ -59,7 +59,7 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
     private volatile boolean ceksukses = false;
     private boolean[] pilih;
     private String[] kode, masalah;
-    private String masalahkeperawatan = "", htmlke1 = "", htmlke2 = "", htmlke3 = "", htmlke4 = "", htmlke5 = "", htmlke6 = "", finger = "";
+    private String masalahkeperawatan = "", htmlke1 = "", htmlke2 = "", htmlke3 = "", htmlke4 = "", htmlke5 = "", htmlke6 = "", finger = "",kebutuhanedukasi="";
     private boolean ke1 = false, ke2 = false, ke3 = false, ke4 = false, ke5 = false, ke6 = false;
     private File file;
     private FileWriter fileWriter;
@@ -5267,29 +5267,90 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
                 System.out.println("Notif : " + e);
             }
             param.put("imunisasi", masalahkeperawatan);
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi,master_kebutuhan_edukasi_komunikasi.kebutuhan_edukasi from master_kebutuhan_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
+                        + "where penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("kebutuhan_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            
+            param.put("kebutuhan_edukasi", kebutuhanedukasi);
+            try {
+                kebutuhanedukasi = "";
+                ps = koneksi.prepareStatement(
+                        "select master_rencana_edukasi_komunikasi.kd_rencana_edukasi,master_rencana_edukasi_komunikasi.rencana_edukasi from master_rencana_edukasi_komunikasi "
+                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi=master_rencana_edukasi_komunikasi.kd_rencana_edukasi "
+                        + "where penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi");
+                try {
+                    ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        kebutuhanedukasi = rs.getString("rencana_edukasi") + ", " + kebutuhanedukasi;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notif : " + e);
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Notif : " + e);
+            }
+            param.put("rencana_edukasi", kebutuhanedukasi);
             Valid.MyReportqry("rptCetakPenilaianAwalKeperawatanRalanAnak.jasper", "report", "::[ Laporan Pengkajian Awal Keperawatan Ralan Bayi/Anak ]::",
-                    "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,pasien.agama,bahasa_pasien.nama_bahasa,cacat_fisik.nama_cacat,penilaian_awal_keperawatan_ralan_bayi.tanggal,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.informasi,penilaian_awal_keperawatan_ralan_bayi.td,penilaian_awal_keperawatan_ralan_bayi.nadi,penilaian_awal_keperawatan_ralan_bayi.rr,penilaian_awal_keperawatan_ralan_bayi.suhu,penilaian_awal_keperawatan_ralan_bayi.gcs,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.bb,penilaian_awal_keperawatan_ralan_bayi.tb,penilaian_awal_keperawatan_ralan_bayi.lp,penilaian_awal_keperawatan_ralan_bayi.lk,penilaian_awal_keperawatan_ralan_bayi.ld,penilaian_awal_keperawatan_ralan_bayi.keluhan_utama,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.rpd,penilaian_awal_keperawatan_ralan_bayi.rpk,penilaian_awal_keperawatan_ralan_bayi.rpo,penilaian_awal_keperawatan_ralan_bayi.alergi,penilaian_awal_keperawatan_ralan_bayi.anakke,penilaian_awal_keperawatan_ralan_bayi.darisaudara,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.caralahir,penilaian_awal_keperawatan_ralan_bayi.ket_caralahir,penilaian_awal_keperawatan_ralan_bayi.umurkelahiran,penilaian_awal_keperawatan_ralan_bayi.kelainanbawaan,penilaian_awal_keperawatan_ralan_bayi.ket_kelainan_bawaan,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.usiatengkurap,penilaian_awal_keperawatan_ralan_bayi.usiaduduk,penilaian_awal_keperawatan_ralan_bayi.usiaberdiri,penilaian_awal_keperawatan_ralan_bayi.usiagigipertama,penilaian_awal_keperawatan_ralan_bayi.usiaberjalan,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.usiabicara,penilaian_awal_keperawatan_ralan_bayi.usiamembaca,penilaian_awal_keperawatan_ralan_bayi.usiamenulis,penilaian_awal_keperawatan_ralan_bayi.gangguanemosi,penilaian_awal_keperawatan_ralan_bayi.alat_bantu,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.ket_bantu,penilaian_awal_keperawatan_ralan_bayi.prothesa,penilaian_awal_keperawatan_ralan_bayi.ket_pro,penilaian_awal_keperawatan_ralan_bayi.adl,penilaian_awal_keperawatan_ralan_bayi.status_psiko,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.ket_psiko,penilaian_awal_keperawatan_ralan_bayi.hub_keluarga,penilaian_awal_keperawatan_ralan_bayi.pengasuh,penilaian_awal_keperawatan_ralan_bayi.ket_pengasuh,penilaian_awal_keperawatan_ralan_bayi.ekonomi,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.budaya,penilaian_awal_keperawatan_ralan_bayi.ket_budaya,penilaian_awal_keperawatan_ralan_bayi.edukasi,penilaian_awal_keperawatan_ralan_bayi.ket_edukasi,penilaian_awal_keperawatan_ralan_bayi.berjalan_a,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.berjalan_b,penilaian_awal_keperawatan_ralan_bayi.berjalan_c,penilaian_awal_keperawatan_ralan_bayi.hasil,penilaian_awal_keperawatan_ralan_bayi.lapor,penilaian_awal_keperawatan_ralan_bayi.ket_lapor,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.sg1,penilaian_awal_keperawatan_ralan_bayi.nilai1,penilaian_awal_keperawatan_ralan_bayi.sg2,penilaian_awal_keperawatan_ralan_bayi.nilai2,penilaian_awal_keperawatan_ralan_bayi.sg3,penilaian_awal_keperawatan_ralan_bayi.nilai3,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.sg4,penilaian_awal_keperawatan_ralan_bayi.nilai4,penilaian_awal_keperawatan_ralan_bayi.total_hasil,penilaian_awal_keperawatan_ralan_bayi.wajah,penilaian_awal_keperawatan_ralan_bayi.nilaiwajah,penilaian_awal_keperawatan_ralan_bayi.kaki,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.nilaikaki,penilaian_awal_keperawatan_ralan_bayi.aktifitas,penilaian_awal_keperawatan_ralan_bayi.nilaiaktifitas,penilaian_awal_keperawatan_ralan_bayi.menangis,penilaian_awal_keperawatan_ralan_bayi.nilaimenangis,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.bersuara,penilaian_awal_keperawatan_ralan_bayi.nilaibersuara,penilaian_awal_keperawatan_ralan_bayi.hasilnyeri,penilaian_awal_keperawatan_ralan_bayi.nyeri,penilaian_awal_keperawatan_ralan_bayi.lokasi,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.durasi,penilaian_awal_keperawatan_ralan_bayi.frekuensi,penilaian_awal_keperawatan_ralan_bayi.nyeri_hilang,penilaian_awal_keperawatan_ralan_bayi.ket_nyeri,penilaian_awal_keperawatan_ralan_bayi.pada_dokter,"
-                    + "penilaian_awal_keperawatan_ralan_bayi.ket_dokter,penilaian_awal_keperawatan_ralan_bayi.rencana,penilaian_awal_keperawatan_ralan_bayi.nip,petugas.nama "
-                    + "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
-                    + "inner join penilaian_awal_keperawatan_ralan_bayi on reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan_bayi.no_rawat "
-                    + "inner join petugas on penilaian_awal_keperawatan_ralan_bayi.nip=petugas.nip "
-                    + "inner join bahasa_pasien on bahasa_pasien.id=pasien.bahasa_pasien "
-                    + "inner join cacat_fisik on cacat_fisik.id=pasien.cacat_fisik where reg_periksa.no_rawat='" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "'", param);
+                        "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,if(pasien.jk='L','Laki-Laki','Perempuan') as jk,pasien.tgl_lahir,pasien.agama,bahasa_pasien.nama_bahasa,cacat_fisik.nama_cacat,penilaian_awal_keperawatan_ralan_bayi.tanggal,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.informasi,penilaian_awal_keperawatan_ralan_bayi.td,penilaian_awal_keperawatan_ralan_bayi.nadi,penilaian_awal_keperawatan_ralan_bayi.rr,penilaian_awal_keperawatan_ralan_bayi.suhu,penilaian_awal_keperawatan_ralan_bayi.gcs,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.bb,penilaian_awal_keperawatan_ralan_bayi.tb,penilaian_awal_keperawatan_ralan_bayi.lp,penilaian_awal_keperawatan_ralan_bayi.lk,penilaian_awal_keperawatan_ralan_bayi.ld,penilaian_awal_keperawatan_ralan_bayi.keluhan_utama,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.rpd,penilaian_awal_keperawatan_ralan_bayi.rpk,penilaian_awal_keperawatan_ralan_bayi.rpo,penilaian_awal_keperawatan_ralan_bayi.alergi,penilaian_awal_keperawatan_ralan_bayi.anakke,penilaian_awal_keperawatan_ralan_bayi.darisaudara,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.caralahir,penilaian_awal_keperawatan_ralan_bayi.ket_caralahir,penilaian_awal_keperawatan_ralan_bayi.umurkelahiran,penilaian_awal_keperawatan_ralan_bayi.kelainanbawaan,penilaian_awal_keperawatan_ralan_bayi.ket_kelainan_bawaan,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.usiatengkurap,penilaian_awal_keperawatan_ralan_bayi.usiaduduk,penilaian_awal_keperawatan_ralan_bayi.usiaberdiri,penilaian_awal_keperawatan_ralan_bayi.usiagigipertama,penilaian_awal_keperawatan_ralan_bayi.usiaberjalan,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.usiabicara,penilaian_awal_keperawatan_ralan_bayi.usiamembaca,penilaian_awal_keperawatan_ralan_bayi.usiamenulis,penilaian_awal_keperawatan_ralan_bayi.gangguanemosi,penilaian_awal_keperawatan_ralan_bayi.alat_bantu,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.ket_bantu,penilaian_awal_keperawatan_ralan_bayi.prothesa,penilaian_awal_keperawatan_ralan_bayi.ket_pro,penilaian_awal_keperawatan_ralan_bayi.adl,penilaian_awal_keperawatan_ralan_bayi.status_psiko,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.ket_psiko,penilaian_awal_keperawatan_ralan_bayi.hub_keluarga,penilaian_awal_keperawatan_ralan_bayi.pengasuh,penilaian_awal_keperawatan_ralan_bayi.ket_pengasuh,penilaian_awal_keperawatan_ralan_bayi.ekonomi,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.budaya,penilaian_awal_keperawatan_ralan_bayi.ket_budaya,penilaian_awal_keperawatan_ralan_bayi.edukasi,penilaian_awal_keperawatan_ralan_bayi.ket_edukasi,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala1,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai1,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala2,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai2,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala3,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai3,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala4,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai4,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala5,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai5,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala6,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai6,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_skala7,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_nilai7,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_totalnilai,penilaian_awal_keperawatan_ralan_bayi.penilaian_humptydumpty_hasil,penilaian_awal_keperawatan_ralan_bayi.kemampuan_baca_tulis,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.butuh_penerjemah,penilaian_awal_keperawatan_ralan_bayi.keterangan_butuh_penerjemah,penilaian_awal_keperawatan_ralan_bayi.terdapat_hambatan_belajar,penilaian_awal_keperawatan_ralan_bayi.hambatan_belajar,penilaian_awal_keperawatan_ralan_bayi.keterangan_hambatan_belajar,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.hambatan_cara_bicara,penilaian_awal_keperawatan_ralan_bayi.hambatan_bahasa_isyarat,penilaian_awal_keperawatan_ralan_bayi.cara_belajar_disukai,penilaian_awal_keperawatan_ralan_bayi.kesediaan_menerima_informasi,penilaian_awal_keperawatan_ralan_bayi.ket_kesediaan_menerima_informasi,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.pemahaman_nutrisi,penilaian_awal_keperawatan_ralan_bayi.pemahaman_penyakit,penilaian_awal_keperawatan_ralan_bayi.pemahaman_pengobatan,penilaian_awal_keperawatan_ralan_bayi.pemahaman_perawatan,penilaian_awal_keperawatan_ralan_bayi.keyakinan_nilai,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.keterbatasan_fisik,penilaian_awal_keperawatan_ralan_bayi.hambatan_emosional,penilaian_awal_keperawatan_ralan_bayi.Motivasi,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.sg1,penilaian_awal_keperawatan_ralan_bayi.nilai1,penilaian_awal_keperawatan_ralan_bayi.sg2,penilaian_awal_keperawatan_ralan_bayi.nilai2,penilaian_awal_keperawatan_ralan_bayi.sg3,penilaian_awal_keperawatan_ralan_bayi.nilai3,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.sg4,penilaian_awal_keperawatan_ralan_bayi.nilai4,penilaian_awal_keperawatan_ralan_bayi.total_hasil,penilaian_awal_keperawatan_ralan_bayi.wajah,penilaian_awal_keperawatan_ralan_bayi.nilaiwajah,penilaian_awal_keperawatan_ralan_bayi.kaki,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.nilaikaki,penilaian_awal_keperawatan_ralan_bayi.aktifitas,penilaian_awal_keperawatan_ralan_bayi.nilaiaktifitas,penilaian_awal_keperawatan_ralan_bayi.menangis,penilaian_awal_keperawatan_ralan_bayi.nilaimenangis,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.bersuara,penilaian_awal_keperawatan_ralan_bayi.nilaibersuara,penilaian_awal_keperawatan_ralan_bayi.hasilnyeri,penilaian_awal_keperawatan_ralan_bayi.nyeri,penilaian_awal_keperawatan_ralan_bayi.lokasi,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.durasi,penilaian_awal_keperawatan_ralan_bayi.frekuensi,penilaian_awal_keperawatan_ralan_bayi.nyeri_hilang,penilaian_awal_keperawatan_ralan_bayi.ket_nyeri,penilaian_awal_keperawatan_ralan_bayi.pada_dokter,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.ket_dokter,penilaian_awal_keperawatan_ralan_bayi.informasi_perencanaan_pulang,penilaian_awal_keperawatan_ralan_bayi.lama_ratarata,"
+                        + "penilaian_awal_keperawatan_ralan_bayi.tanggal_pulang,penilaian_awal_keperawatan_ralan_bayi.kondisi_saat_pulang,penilaian_awal_keperawatan_ralan_bayi.perawatan_lanjutan,penilaian_awal_keperawatan_ralan_bayi.cara_transportasi,penilaian_awal_keperawatan_ralan_bayi.transportasi_digunakan,penilaian_awal_keperawatan_ralan_bayi.rencana,penilaian_awal_keperawatan_ralan_bayi.nip,petugas.nama "
+                        + "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "
+                        + "inner join penilaian_awal_keperawatan_ralan_bayi on reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan_bayi.no_rawat "
+                        + "inner join petugas on penilaian_awal_keperawatan_ralan_bayi.nip=petugas.nip "
+                        + "inner join bahasa_pasien on bahasa_pasien.id=pasien.bahasa_pasien "
+                        + "inner join cacat_fisik on cacat_fisik.id=pasien.cacat_fisik where reg_periksa.no_rawat='" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "'", param);
         } else {
             JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data terlebih dahulu..!!!!");
         }
