@@ -631,6 +631,8 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         }
         
+        tbDetailRencanaEdukasi.setDefaultRenderer(Object.class, new WarnaTable());
+        
         try {
             TANGGALMUNDUR=koneksiDB.TANGGALMUNDUR();
         } catch (Exception e) {
@@ -922,12 +924,12 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         panelBiasa2 = new widget.PanelBiasa();
         Scroll12 = new widget.ScrollPane();
         tbRencanaEdukasi = new widget.Table();
-        TCariMasalah1 = new widget.TextBox();
+        TCariKebutuhanEdukasi = new widget.TextBox();
         BtnTambahRencanaEdukasi = new widget.Button();
         BtnAllRencanaEdukasi = new widget.Button();
         BtnCariRencanaEdukasi = new widget.Button();
         label16 = new widget.Label();
-        TCariRencana1 = new widget.TextBox();
+        TCariRencanaEdukasi = new widget.TextBox();
         jSeparator15 = new javax.swing.JSeparator();
         jLabel272 = new widget.Label();
         InformasiPerencanaanPulang = new widget.ComboBox();
@@ -1164,19 +1166,19 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(TNoRw);
-        TNoRw.setBounds(74, 10, 131, 23);
+        TNoRw.setBounds(70, 10, 131, 23);
 
         TPasien.setEditable(false);
         TPasien.setHighlighter(null);
         TPasien.setName("TPasien"); // NOI18N
         FormInput.add(TPasien);
-        TPasien.setBounds(309, 10, 260, 23);
+        TPasien.setBounds(310, 10, 260, 23);
 
         TNoRM.setEditable(false);
         TNoRM.setHighlighter(null);
         TNoRM.setName("TNoRM"); // NOI18N
         FormInput.add(TNoRM);
-        TNoRM.setBounds(207, 10, 100, 23);
+        TNoRM.setBounds(210, 10, 100, 23);
 
         label14.setText("Petugas :");
         label14.setName("label14"); // NOI18N
@@ -1228,7 +1230,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         TglLahir.setHighlighter(null);
         TglLahir.setName("TglLahir"); // NOI18N
         FormInput.add(TglLahir);
-        TglLahir.setBounds(644, 10, 80, 23);
+        TglLahir.setBounds(640, 10, 80, 23);
 
         jLabel9.setText("Riwayat Pengobatan :");
         jLabel9.setName("jLabel9"); // NOI18N
@@ -1244,7 +1246,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(Jk);
-        Jk.setBounds(774, 10, 80, 23);
+        Jk.setBounds(770, 10, 80, 23);
 
         jLabel10.setText("No.Rawat :");
         jLabel10.setName("jLabel10"); // NOI18N
@@ -1618,17 +1620,22 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(StatusPsiko);
-        StatusPsiko.setBounds(134, 420, 110, 23);
+        StatusPsiko.setBounds(140, 430, 110, 23);
 
         KetPsiko.setFocusTraversalPolicyProvider(true);
         KetPsiko.setName("KetPsiko"); // NOI18N
+        KetPsiko.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KetPsikoActionPerformed(evt);
+            }
+        });
         KetPsiko.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 KetPsikoKeyPressed(evt);
             }
         });
         FormInput.add(KetPsiko);
-        KetPsiko.setBounds(248, 420, 230, 23);
+        KetPsiko.setBounds(250, 430, 230, 23);
 
         jLabel58.setText("Edukasi diberikan kepada :");
         jLabel58.setName("jLabel58"); // NOI18N
@@ -2078,7 +2085,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         TotalHasil.setBounds(774, 770, 80, 23);
 
         TglAsuhan.setForeground(new java.awt.Color(50, 70, 50));
-        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-04-2026 08:47:51" }));
+        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-05-2026 19:56:48" }));
         TglAsuhan.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglAsuhan.setName("TglAsuhan"); // NOI18N
         TglAsuhan.setOpaque(false);
@@ -2142,7 +2149,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         jLabel62.setText(":");
         jLabel62.setName("jLabel62"); // NOI18N
         FormInput.add(jLabel62);
-        jLabel62.setBounds(0, 420, 130, 23);
+        jLabel62.setBounds(0, 430, 130, 23);
 
         jLabel95.setText(":");
         jLabel95.setName("jLabel95"); // NOI18N
@@ -2170,10 +2177,10 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         KetBudaya.setBounds(484, 500, 370, 23);
 
         jLabel96.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel96.setText("V. RIWAYAT PSIKO-SOSIAL, SPIRITUAL DAN BUDAYA");
+        jLabel96.setText("V. RIWAYAT PSIKO-SOSIAL, SPIRITUAL,EKONOMI DAN BUDAYA");
         jLabel96.setName("jLabel96"); // NOI18N
         FormInput.add(jLabel96);
-        jLabel96.setBounds(10, 400, 380, 23);
+        jLabel96.setBounds(10, 410, 320, 23);
 
         jLabel97.setText("Dilaporkan kepada dokter ?");
         jLabel97.setName("jLabel97"); // NOI18N
@@ -2324,12 +2331,12 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         Bahasa.setFocusTraversalPolicyProvider(true);
         Bahasa.setName("Bahasa"); // NOI18N
         FormInput.add(Bahasa);
-        Bahasa.setBounds(684, 420, 170, 23);
+        Bahasa.setBounds(670, 430, 170, 23);
 
         jLabel76.setText("Bahasa yang digunakan sehari-hari :");
         jLabel76.setName("jLabel76"); // NOI18N
         FormInput.add(jLabel76);
-        jLabel76.setBounds(450, 420, 230, 23);
+        jLabel76.setBounds(430, 430, 230, 23);
 
         jLabel77.setText(":");
         jLabel77.setName("jLabel77"); // NOI18N
@@ -2506,13 +2513,13 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         jLabel78.setText("X.PERENCANAAN KEBUTUHAN KOMUNIKASI DAN EDUKASI");
         jLabel78.setName("jLabel78"); // NOI18N
         FormInput.add(jLabel78);
-        jLabel78.setBounds(10, 1240, 380, 23);
+        jLabel78.setBounds(20, 1240, 380, 23);
 
         jLabel79.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel79.setText("Status Psikologis");
         jLabel79.setName("jLabel79"); // NOI18N
         FormInput.add(jLabel79);
-        jLabel79.setBounds(40, 420, 130, 23);
+        jLabel79.setBounds(40, 430, 130, 23);
 
         jLabel98.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel98.setText("Kepercayaan / Budaya / Nilai-nilai khusus yang perlu diperhatikan");
@@ -3100,7 +3107,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         label15.setName("label15"); // NOI18N
         label15.setPreferredSize(new java.awt.Dimension(60, 23));
         FormInput.add(label15);
-        label15.setBounds(30, 1430, 60, 23);
+        label15.setBounds(30, 1440, 60, 20);
 
         BtnTambahKebutuhanEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
         BtnTambahKebutuhanEdukasi.setMnemonic('3');
@@ -3113,7 +3120,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnTambahKebutuhanEdukasi);
-        BtnTambahKebutuhanEdukasi.setBounds(380, 1430, 28, 23);
+        BtnTambahKebutuhanEdukasi.setBounds(380, 1440, 28, 20);
 
         BtnAllKebutuhanEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Search-16x16.png"))); // NOI18N
         BtnAllKebutuhanEdukasi.setMnemonic('2');
@@ -3136,7 +3143,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnAllKebutuhanEdukasi);
-        BtnAllKebutuhanEdukasi.setBounds(350, 1430, 28, 23);
+        BtnAllKebutuhanEdukasi.setBounds(350, 1440, 28, 20);
 
         BtnCariKebutuhanEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png"))); // NOI18N
         BtnCariKebutuhanEdukasi.setMnemonic('1');
@@ -3154,7 +3161,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnCariKebutuhanEdukasi);
-        BtnCariKebutuhanEdukasi.setBounds(320, 1430, 28, 23);
+        BtnCariKebutuhanEdukasi.setBounds(320, 1440, 28, 20);
 
         TabRencanaKeperawatan1.setBackground(new java.awt.Color(255, 255, 254));
         TabRencanaKeperawatan1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -3179,16 +3186,16 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         FormInput.add(TabRencanaKeperawatan1);
         TabRencanaKeperawatan1.setBounds(440, 1260, 420, 143);
 
-        TCariMasalah1.setToolTipText("Alt+C");
-        TCariMasalah1.setName("TCariMasalah1"); // NOI18N
-        TCariMasalah1.setPreferredSize(new java.awt.Dimension(140, 23));
-        TCariMasalah1.addKeyListener(new java.awt.event.KeyAdapter() {
+        TCariKebutuhanEdukasi.setToolTipText("Alt+C");
+        TCariKebutuhanEdukasi.setName("TCariKebutuhanEdukasi"); // NOI18N
+        TCariKebutuhanEdukasi.setPreferredSize(new java.awt.Dimension(140, 23));
+        TCariKebutuhanEdukasi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                TCariMasalah1KeyPressed(evt);
+                TCariKebutuhanEdukasiKeyPressed(evt);
             }
         });
-        FormInput.add(TCariMasalah1);
-        TCariMasalah1.setBounds(100, 1430, 215, 23);
+        FormInput.add(TCariKebutuhanEdukasi);
+        TCariKebutuhanEdukasi.setBounds(100, 1440, 215, 20);
 
         BtnTambahRencanaEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/plus_16.png"))); // NOI18N
         BtnTambahRencanaEdukasi.setMnemonic('3');
@@ -3201,7 +3208,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnTambahRencanaEdukasi);
-        BtnTambahRencanaEdukasi.setBounds(820, 1430, 28, 23);
+        BtnTambahRencanaEdukasi.setBounds(820, 1440, 28, 23);
 
         BtnAllRencanaEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/Search-16x16.png"))); // NOI18N
         BtnAllRencanaEdukasi.setMnemonic('2');
@@ -3219,7 +3226,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnAllRencanaEdukasi);
-        BtnAllRencanaEdukasi.setBounds(790, 1430, 28, 23);
+        BtnAllRencanaEdukasi.setBounds(790, 1440, 28, 23);
 
         BtnCariRencanaEdukasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/accept.png"))); // NOI18N
         BtnCariRencanaEdukasi.setMnemonic('1');
@@ -3237,24 +3244,24 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
             }
         });
         FormInput.add(BtnCariRencanaEdukasi);
-        BtnCariRencanaEdukasi.setBounds(760, 1430, 28, 23);
+        BtnCariRencanaEdukasi.setBounds(760, 1440, 28, 23);
 
         label16.setText("Key Word :");
         label16.setName("label16"); // NOI18N
         label16.setPreferredSize(new java.awt.Dimension(60, 23));
         FormInput.add(label16);
-        label16.setBounds(460, 1430, 60, 23);
+        label16.setBounds(460, 1440, 60, 23);
 
-        TCariRencana1.setToolTipText("Alt+C");
-        TCariRencana1.setName("TCariRencana1"); // NOI18N
-        TCariRencana1.setPreferredSize(new java.awt.Dimension(215, 23));
-        TCariRencana1.addKeyListener(new java.awt.event.KeyAdapter() {
+        TCariRencanaEdukasi.setToolTipText("Alt+C");
+        TCariRencanaEdukasi.setName("TCariRencanaEdukasi"); // NOI18N
+        TCariRencanaEdukasi.setPreferredSize(new java.awt.Dimension(215, 23));
+        TCariRencanaEdukasi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                TCariRencana1KeyPressed(evt);
+                TCariRencanaEdukasiKeyPressed(evt);
             }
         });
-        FormInput.add(TCariRencana1);
-        TCariRencana1.setBounds(520, 1430, 235, 23);
+        FormInput.add(TCariRencanaEdukasi);
+        TCariRencanaEdukasi.setBounds(520, 1440, 235, 23);
 
         jSeparator15.setBackground(new java.awt.Color(239, 244, 234));
         jSeparator15.setForeground(new java.awt.Color(239, 244, 234));
@@ -3318,7 +3325,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         label29.setBounds(630, 1910, 130, 23);
 
         TanggalPulang.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-04-2026" }));
+        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-05-2026" }));
         TanggalPulang.setDisplayFormat("dd-MM-yyyy");
         TanggalPulang.setName("TanggalPulang"); // NOI18N
         TanggalPulang.setOpaque(false);
@@ -3460,7 +3467,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-04-2026" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-05-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -3474,7 +3481,7 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "27-04-2026" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-05-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -5067,9 +5074,9 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnCariKebutuhanEdukasiKeyPressed
 
-    private void TCariMasalah1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariMasalah1KeyPressed
+    private void TCariKebutuhanEdukasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariKebutuhanEdukasiKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TCariMasalah1KeyPressed
+    }//GEN-LAST:event_TCariKebutuhanEdukasiKeyPressed
 
     private void BtnTambahRencanaEdukasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTambahRencanaEdukasiActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -5102,9 +5109,9 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnCariRencanaEdukasiKeyPressed
 
-    private void TCariRencana1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariRencana1KeyPressed
+    private void TCariRencanaEdukasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TCariRencanaEdukasiKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TCariRencana1KeyPressed
+    }//GEN-LAST:event_TCariRencanaEdukasiKeyPressed
 
     private void InformasiPerencanaanPulangKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_InformasiPerencanaanPulangKeyPressed
         //        Valid.pindah(evt,SkalaNIPS5,LamaRatarata);
@@ -5145,6 +5152,10 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
     private void KeteranganHambatanBelajarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KeteranganHambatanBelajarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_KeteranganHambatanBelajarActionPerformed
+
+    private void KetPsikoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KetPsikoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_KetPsikoActionPerformed
 
     /**
     * @param args the command line arguments
@@ -5297,10 +5308,10 @@ public final class RMPenilaianAwalKeperawatanRalanGeriatri extends javax.swing.J
     private widget.TextBox Suhu;
     private widget.TextBox TB;
     private widget.TextBox TCari;
+    private widget.TextBox TCariKebutuhanEdukasi;
     private widget.TextBox TCariMasalah;
-    private widget.TextBox TCariMasalah1;
     private widget.TextBox TCariRencana;
-    private widget.TextBox TCariRencana1;
+    private widget.TextBox TCariRencanaEdukasi;
     private widget.TextBox TD;
     private widget.TextBox TNoRM;
     private widget.TextBox TNoRM1;
