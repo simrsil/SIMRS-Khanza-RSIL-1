@@ -137,7 +137,7 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
         tbKamar.setDefaultRenderer(Object.class, new WarnaTable());
         
         NoFaktur.setDocument(new batasInput((byte)20).getKata(NoFaktur));
-        BesarBayar.setDocument(new batasInput((byte)15).getKata(BesarBayar));
+        BesarBayar.setDocument(new batasInput((byte)15).getOnlyAngka(BesarBayar));
         NoBukti.setDocument(new batasInput((byte)30).getKata(NoBukti));
         KdPetugas.setDocument(new batasInput((byte)20).getKata(KdPetugas));
         keterangan.setDocument(new batasInput((byte)100).getKata(keterangan));
@@ -858,6 +858,10 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
                         myObj.close();
                     } catch (Exception e) {
                         koderekening="";
+                    } finally {
+                        if (myObj != null) try { myObj.close(); } catch (Exception e) {}
+                        response = null;
+                        root = null;
                     }
                     
                     if(koderekening.equals("")){
@@ -993,7 +997,11 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
                     myObj.close();
                 } catch (Exception e) {
                     sukses=false;
-                } 
+                } finally {
+                    if (myObj != null) try { myObj.close(); } catch (Exception e) {}
+                    response = null;
+                    root = null;
+                }
                 
                 if(koderekening.equals("")){
                     sukses=false; 
@@ -1678,7 +1686,7 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
     public void emptTeks() {
         Kd2.setText("");
         BesarBayar.setText("0");
-        setData(NoFaktur.getText());
+        //setData(NoFaktur.getText());
         NoBukti.setText("");
         keterangan.setText("");
         TglBayar.setDate(new Date());
@@ -1766,6 +1774,8 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
              iyembuilder=null;
         } catch (Exception e) {
             System.out.println("Notifikasi : "+e);
+        } finally {
+            if (fileWriter != null) try { fileWriter.close(); } catch (Exception e) {}
         }
     }
     
@@ -1786,6 +1796,10 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
             }else{
                 System.out.println("Notifikasi : "+ex);
             }
+        } finally {
+            if (myObj != null) try { myObj.close(); } catch (Exception e) {}
+            response = null;
+            root = null;
         }
     } 
     
@@ -1847,6 +1861,10 @@ public final class KeuanganBayarPesanToko extends javax.swing.JDialog {
              Akun_Biaya_Mandiri="";
              kodemcm="";
              norekening="";
+        } finally {
+            if (myObj != null) try { myObj.close(); } catch (Exception e) {}
+            response = null;
+            root = null;
         }
     }
     

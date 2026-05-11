@@ -17,6 +17,7 @@ import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
 import fungsi.akses;
+import fungsi.feeperujukranap;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -53,7 +54,6 @@ public final class DlgDokterAsalPasienRanap extends javax.swing.JDialog {
     private int i=0;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private volatile boolean ceksukses = false;
-    private double nilaiperujuk=Sequel.cariIsiAngka("select set_jam_minimal.feeperujuk from set_jam_minimal");
     /** Creates new form DlgLhtBiaya
      * @param parent
      * @param modal */
@@ -85,6 +85,10 @@ public final class DlgDokterAsalPasienRanap extends javax.swing.JDialog {
         tbBangsal.setDefaultRenderer(Object.class, new WarnaTable());
 
         TKd.setDocument(new batasInput((byte)20).getKata(TKd));
+        
+        if(feeperujukranap.getFeePerujukRanap()==null){
+            feeperujukranap.SetFeeRujukan();
+        }
     }    
 
     /** This method is called from within the constructor to
@@ -305,7 +309,8 @@ public final class DlgDokterAsalPasienRanap extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrintActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        if(ceksukses==false){
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             if(tabMode.getRowCount()==0){
                 JOptionPane.showMessageDialog(null,"Maaf, data sudah habis. Tidak ada data yang bisa anda print...!!!!");
             }else if(tabMode.getRowCount()!=0){
@@ -326,6 +331,9 @@ public final class DlgDokterAsalPasienRanap extends javax.swing.JDialog {
                 Valid.MyReportqry("rptDokterAsalPasienRanap.jasper","report","::[ Laporan Dokter Asal Pasien Ranap ]::","select * from temporary where temporary.temp37='"+akses.getalamatip()+"' order by temporary.no",param);
             }
             this.setCursor(Cursor.getDefaultCursor());
+        }else{
+            JOptionPane.showMessageDialog(null,"Masih proses menampilkan data, harap tunggu terlebih dahulu...!");
+        } 
 }//GEN-LAST:event_BtnPrintActionPerformed
 
     private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnPrintKeyPressed
@@ -352,9 +360,7 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
 private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_SPACE){
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); 
             runBackground(() ->tampil());
-            this.setCursor(Cursor.getDefaultCursor());
         }else{
             Valid.pindah(evt, TKd, BtnPrint);
         }
@@ -530,13 +536,13 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                         jumlahpasien=Sequel.cariInteger("select count(reg_periksa.no_rawat) from reg_periksa where reg_periksa.status_lanjut='Ranap' and reg_periksa.tgl_registrasi between '"+Valid.SetTgl(Tgl1.getSelectedItem()+"")+"' and '"+Valid.SetTgl(Tgl2.getSelectedItem()+"")+"' and reg_periksa.kd_dokter='"+rs.getString("kd_dokter")+"' and reg_periksa.kd_pj='"+kdpenjab.getText()+"'");
                     }
                     totaljumlahpasien=totaljumlahpasien+jumlahpasien;
-                    jasadokter=nilaiperujuk*jumlahpasien;
+                    jasadokter=feeperujukranap.getFeePerujukRanap()*jumlahpasien;
                     tabMode.addRow(new Object[]{
                         rs.getString("kd_dokter"),rs.getString("nm_dokter"),jumlahpasien,Valid.SetAngka(jasadokter)
                     });
                 }
                 tabMode.addRow(new Object[]{
-                    ">>","Jumlah Total Pasien",totaljumlahpasien,Valid.SetAngka(totaljumlahpasien*nilaiperujuk)
+                    ">>","Jumlah Total Pasien",totaljumlahpasien,Valid.SetAngka(totaljumlahpasien*feeperujukranap.getFeePerujukRanap())
                 });
             } catch (Exception e) {
                 System.out.println("Notif : "+e);
