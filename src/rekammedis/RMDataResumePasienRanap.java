@@ -1994,6 +1994,9 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
                 }else{
                     if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),3).toString())){
                         ganti();
+                    }else if(Sequel.cariInteger("select count(petugas.nip) from petugas where petugas.kd_jbtn='J025' and petugas.nip=?",akses.getkode())>0){
+                        JOptionPane.showMessageDialog(null,"Data sudah berhasil di ganti oleh petugas JAMKES");
+                        ganti();
                     }else{
                         JOptionPane.showMessageDialog(null,"Hanya bisa diganti oleh dokter yang bersangkutan..!!");
                     }
@@ -3607,8 +3610,13 @@ public final class RMDataResumePasienRanap extends javax.swing.JDialog {
         BtnEdit.setEnabled(akses.getdata_resume_pasien());
         BtnPrint.setEnabled(akses.getdata_resume_pasien()); 
         MnInputDiagnosa.setEnabled(akses.getdiagnosa_pasien());   
-        ppBerkasDigital.setEnabled(akses.getberkas_digital_perawatan());    
-        if(akses.getjml2()>=1){
+        ppBerkasDigital.setEnabled(akses.getberkas_digital_perawatan());
+        
+        //CUSTOM RSIL
+        if(Sequel.cariInteger("select count(petugas.nip) from petugas where petugas.kd_jbtn='J025' and petugas.nip=?",akses.getkode())>0){
+            KdDokter.setEditable(false);
+            BtnDokter.setEnabled(true);
+        }else if(akses.getjml2()>=1){
             KdDokter.setEditable(false);
             BtnDokter.setEnabled(false);
             KdDokter.setText(akses.getkode());

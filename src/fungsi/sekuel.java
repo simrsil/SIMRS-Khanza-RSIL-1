@@ -1397,7 +1397,9 @@ public final class sekuel {
         try {
             waktumulai = formattanggal.parse(tanggalregistrasi);
             kegiatan = formattanggal.parse(tanggalinputdata);
-            bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
+            //CUSTOMM (Menghilangkan validasi pengeditan data)
+            //bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
+            bedawaktu = (1000)/1000;
             if(bedawaktu<0){
                 bool=false;
                 JOptionPane.showMessageDialog(null,"Maaf, jam input data / perubahan data minimal di jam "+tanggalregistrasi+" !");
@@ -1416,7 +1418,9 @@ public final class sekuel {
         try {
             waktumulai = formattanggal.parse(tanggalmulai);
             kegiatan = formattanggal.parse(tanggalinputdata);
-            bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
+            //CUSTOMM (Menghilangkan validasi perubahan data / penghapusan
+            //bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
+            bedawaktu = (1000)/1000;
             if(bedawaktu>172800){
                 bool=false;
                 JOptionPane.showMessageDialog(null,"Maaf, perubahan data / penghapusan data tidak boleh lebih dari 2 x 24 jam !");

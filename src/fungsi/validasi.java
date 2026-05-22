@@ -1421,6 +1421,11 @@ public final class validasi {
         return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
     }
     
+    //CUSTOM RSIL
+    public double SetAngka9(double value,int places){      
+        return new BigDecimal(value).setScale(places=2, RoundingMode.HALF_UP).doubleValue();
+    }
+    
     public double SetAngka(String txt){
         double x;   
         try {

@@ -1862,6 +1862,7 @@ public class frmUtama extends javax.swing.JFrame {
         jSeparator13 = new javax.swing.JPopupMenu.Separator();
         MnRekapHadir6 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenu8 = new javax.swing.JMenu();
 
         DlgLogin.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         DlgLogin.setName("DlgLogin"); // NOI18N
@@ -2068,7 +2069,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "11/03/2026" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "12/05/2026" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -8304,6 +8305,24 @@ public class frmUtama extends javax.swing.JFrame {
         });
         MenuBar.add(jMenu4);
 
+        jMenu8.setBackground(new java.awt.Color(20, 0, 20));
+        jMenu8.setBorder(null);
+        jMenu8.setForeground(new java.awt.Color(255, 255, 255));
+        jMenu8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/file-edit-16x16.png"))); // NOI18N
+        jMenu8.setMnemonic('G');
+        jMenu8.setText("Update V20260512");
+        jMenu8.setToolTipText("Alt+G");
+        jMenu8.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jMenu8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jMenu8.setName("jMenu8"); // NOI18N
+        jMenu8.setPreferredSize(new java.awt.Dimension(121, 26));
+        jMenu8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu8MouseClicked(evt);
+            }
+        });
+        MenuBar.add(jMenu8);
+
         setJMenuBar(MenuBar);
 
         pack();
@@ -8417,7 +8436,9 @@ public class frmUtama extends javax.swing.JFrame {
                     BtnLog.setText("Log Out");
                     MnLogin.setText("Log Out");
                     lblStts.setText("Admin : ");
-                    lblUser.setText(akses.getkode());
+                    //lblUser.setText(akses.getkode());
+                    //CUSTOM RSIL
+                    lblUser.setText(Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik=?",akses.getkode()));
                     MnGantiPassword.setEnabled(true);
                     MnPengajuanCutiPegawai.setEnabled(true);
                     BtnToolReg.setEnabled(akses.getregistrasi());
@@ -14632,6 +14653,10 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         About.setLocationRelativeTo(PanelWall); 
         About.setVisible(true); 
     }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenu8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu8MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu8MouseClicked
 
     private void btnKategoriPerpustakaanActionPerformed(java.awt.event.ActionEvent evt) {
         isTutup();
@@ -24014,6 +24039,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator12;

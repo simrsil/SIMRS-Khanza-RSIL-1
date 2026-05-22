@@ -399,6 +399,8 @@ public final class DlgReg extends javax.swing.JDialog {
 
         tbPetugas.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbPetugas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        //CUSTOM RSIL
+        tbPetugas.getTableHeader().setReorderingAllowed(false);
 
         for (i = 0; i < 24; i++) {
             TableColumn column = tbPetugas.getColumnModel().getColumn(i);
@@ -9617,6 +9619,11 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             param.put("propinsirs",akses.getpropinsirs());
             param.put("kontakrs",akses.getkontakrs());
             param.put("emailrs",akses.getemailrs());
+            //CUSTOM RSIL
+            param.put("age",Sequel.cariIsi("SELECT CONCAT(TIMESTAMPDIFF(YEAR, p.tgl_lahir, CURDATE()), ' Th ', MOD(TIMESTAMPDIFF(MONTH, p.tgl_lahir, CURDATE()), 12), ' Bl ',DATEDIFF(CURDATE(),DATE_ADD(p.tgl_lahir,INTERVAL TIMESTAMPDIFF(MONTH, p.tgl_lahir, CURDATE()) MONTH)), ' Hr') AS umur " +
+                "FROM reg_periksa rp " +
+                "JOIN pasien p ON rp.no_rkm_medis=p.no_rkm_medis " +
+                "WHERE rp.no_rawat='"+TNoRw.getText()+"'"));
             param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
             Valid.MyReportqry("rptBuktiRegister.jasper","report","::[ Bukti Register ]::",
                    "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,pasien.no_tlp,"+

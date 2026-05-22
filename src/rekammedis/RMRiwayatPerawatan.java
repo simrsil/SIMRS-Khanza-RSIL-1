@@ -106,9 +106,6 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
     public RMRiwayatPerawatan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        //CUSTOM RS ISLAM LUMAJANG - Selasa, 03 Maret 2026
-        initHyperlinkListenerSBAR();
-        //
         this.setLocation(8,1);
         setSize(885,674);
         WindowPhrase.setSize(320,100);
@@ -157,10 +154,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         LoadHTMLPembelian.setEditorKit(kit);
         LoadHTMLPiutang.setEditorKit(kit);
         LoadHTMLRetensi.setEditorKit(kit);
-        //CUSTOM RS ISLAM LMJ - Selasa, 03 Maret 2026
-        //----------------------------------------------------------------------
-        LoadHTMLSbar.setEditorKit(kit);        
-        //----------------------------------------------------------------------
+
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule(".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}.isi a{text-decoration:none;color:#8b9b95;padding:0 0 0 0px;font-family: Tahoma;font-size: 8.5px;border: white;}");
         Document doc = kit.createDefaultDocument();
@@ -168,102 +162,50 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         LoadHTMLRiwayatPerawatan.setEditable(false);
         LoadHTMLRiwayatPerawatan.addHyperlinkListener(e -> {
             if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
-              Desktop desktop = Desktop.getDesktop();
-              try {
-                desktop.browse(e.getURL().toURI());
-              } catch (Exception ex) {
-                ex.printStackTrace();
-              }
+                String url = e.getDescription();
+
+                if (url.startsWith("validasi_sbar_konsul:")) {
+                    verifikasiSbarKonsul(url.replace("validasi_sbar_konsul:", ""));
+                } else if (url.startsWith("hapus_validasi_sbar_konsul:")) {
+                    hapusVerifikasiSbarKonsul(url.replace("hapus_validasi_sbar_konsul:", ""));
+                } else {
+                    Desktop desktop = Desktop.getDesktop();
+                    try {
+                        desktop.browse(e.getURL().toURI());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
-            
         });
+        //LoadHTMLRiwayatPerawatan.addHyperlinkListener(e -> {
+            //if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+              //Desktop desktop = Desktop.getDesktop();
+              //try {
+                //desktop.browse(e.getURL().toURI());
+              //} catch (Exception ex) {
+                //ex.printStackTrace();
+              //}
+            //}
+            
+        //});
         LoadHTMLSOAPI.setDocument(doc);
         LoadHTMLSOAPI.setEditable(false);
         LoadHTMLSOAPI.addHyperlinkListener(e -> {
             if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                 String url = e.getDescription();
-
-                // ── VERIFIKASI RALAN──
-                if (url != null && url.startsWith("verifikasi://")) {
-                    String[] data = url.replace("verifikasi://", "").split("\\|");
-                    String noRawat = data[0];
-                    String tglRawat = data[1];
-                    String jamRawat = data[2];
-                    String nip = data[3];
-                    String nama = data[4];
-
-                    int konfirmasi = JOptionPane.showConfirmDialog(null,"Apakah Anda yakin ingin verif SOAPIE ini?",
-                            "Konfirmasi Verifikasi SOAPIE", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
-                    );
-                    if (konfirmasi == JOptionPane.YES_OPTION) {
-                        if (Sequel.cariInteger("select count(reg_periksa.kd_dokter) from reg_periksa where reg_periksa.kd_dokter =?", akses.getkode()) > 0) {
-                            if (Sequel.menyimpantf("pemeriksaan_ralan_validasi", "?,?,?,?,?,?,?", "Verif SOAPIE Ralan", 7, new String[]{
-                                noRawat, tglRawat, jamRawat, akses.getkode(), new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()), new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()), "Validasi" // jam_validasi
-                            })) {
-                                JOptionPane.showMessageDialog(null,"Verifikasi SOAPIE berhasil!\n\n","Verifikasi Berhasil",
-                                JOptionPane.INFORMATION_MESSAGE);
-                                tampilSoapi();
-                            } else {
-                                JOptionPane.showMessageDialog(null,
-                                        "Gagal menyimpan verifikasi!",
-                                        "Error",
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null,
-                                    "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
-                        }
-                    }
-
-                    // ── HAPUS VERIFIKASI ──
-                } else if (url != null && url.startsWith("hapusverif://")) {
-                    String[] data = url.replace("hapusverif://", "").split("\\|");
-                    String noRawat = data[0];
-                    String tglRawat = data[1];
-                    String jamRawat = data[2];
-                    String nip = data[3];
-                    String nama = data[4];
-
-                    int konfirmasi = JOptionPane.showConfirmDialog(
-                            null,
-                            "Apakah Anda yakin ingin MENGHAPUS verifikasi SOAPIE ini?", "Konfirmasi Hapus Verif Soapi Ralan",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.WARNING_MESSAGE
-                    );
-
-                    if (konfirmasi == JOptionPane.YES_OPTION) {
-                        try {
-                            PreparedStatement psHapus = koneksi.prepareStatement(
-                                    "DELETE FROM pemeriksaan_ralan_validasi "
-                                    + "WHERE no_rawat=? AND tgl_perawatan=? AND jam_rawat=?");
-                            psHapus.setString(1, noRawat);
-                            psHapus.setString(2, tglRawat);
-                            psHapus.setString(3, jamRawat);
-                            psHapus.executeUpdate();
-                            psHapus.close();
-
-                            JOptionPane.showMessageDialog(null,
-                                    "✔ Verifikasi berhasil dihapus!",
-                                    "Hapus Berhasil",
-                                    JOptionPane.INFORMATION_MESSAGE);
-
-                            tampilSoapi();
-
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(null,
-                                    "Gagal menghapus verifikasi!\nDetail: " + ex.getMessage(),
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            ex.printStackTrace();
-                        }
-                    }
-
-                    // ── LINK BIASA (browse URL) ──
+                if (url.startsWith("verifikasi_ralan://")) {
+                    verifikasiRalan(url);
+                } else if (url.startsWith("hapusverif_ralan://")) {
+                    hapusVerifRalan(url);
+                } else if (url.startsWith("verifikasi_ranap://")) {
+                    verifikasiRanap(url);
+                } else if (url.startsWith("hapusverif_ranap://")) {
+                    hapusVerifRanap(url);
                 } else {
                     try {
                         if (e.getURL() != null) {
-                            Desktop desktop = Desktop.getDesktop();
-                            desktop.browse(e.getURL().toURI());
+                            Desktop.getDesktop().browse(e.getURL().toURI());
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -271,16 +213,16 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
                 }
             }
         });
-//        LoadHTMLSOAPI.addHyperlinkListener(e -> {
-//            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
-//                Desktop desktop = Desktop.getDesktop();
-//                try {
-//                   desktop.browse(e.getURL().toURI());
-//                } catch (Exception ex) {
-//                  ex.printStackTrace();
-//                }
-//            }
-//        });
+        //LoadHTMLSOAPI.addHyperlinkListener(e -> {
+            //if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                //Desktop desktop = Desktop.getDesktop();
+                //try {
+                   //desktop.browse(e.getURL().toURI());
+                //} catch (Exception ex) {
+                  //ex.printStackTrace();
+                //}
+            //}
+        //});
         LoadHTMLPembelian.setDocument(doc);
         LoadHTMLPembelian.setEditable(false);
         LoadHTMLPembelian.addHyperlinkListener(e -> {
@@ -317,43 +259,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
                 }
             }
         });
-        //CUSTOM RS ISLAM LMJ - Selasa, 03 Maret 2026
-        LoadHTMLSbar.setDocument(doc);
-        LoadHTMLSbar.setEditable(false);
-        LoadHTMLSbar.addHyperlinkListener(e -> {
-            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
-                String desc = e.getDescription(); // <-- ini aman, tidak null
-
-                if (desc.startsWith("validasi:")) {
-                    String data = desc.substring("validasi:".length());
-                    //JOptionPane.showMessageDialog(null, "Validasi untuk: " + data);
-
-                } else if (desc.startsWith("hapus_validasi:")) {
-                    String data = desc.substring("hapus_validasi:".length());
-                    //JOptionPane.showMessageDialog(null, "Hapus validasi untuk: " + data);
-
-                } else if (desc.startsWith("validasi_ralan:")) {
-                    String data = desc.substring("validasi_ralan:".length());
-                    //JOptionPane.showMessageDialog(null, "Hapus validasi untuk: " + data);
-
-                } else if (desc.startsWith("hapus_validasi_ralan:")) {
-                    String data = desc.substring("hapus_validasi_ralan:".length());
-                    //JOptionPane.showMessageDialog(null, "Hapus validasi untuk: " + data);
-                } else {
-                    // fallback untuk link asli (http://, https://, file://)
-                    try {
-                        Desktop.getDesktop().browse(new URI(desc));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
-      //try {
-      //      TAMPILBARCODESBAR=koneksiDB.TAMPILBARCODESBAR();
-      //  } catch (Exception e) {
-      //      TAMPILBARCODESBAR="no";
-      //  }
+        
         ChkAccor.setSelected(false);
         isMenu();
     }    
@@ -412,8 +318,6 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         tbRegistrasi = new widget.Table();
         Scroll2 = new widget.ScrollPane();
         LoadHTMLSOAPI = new widget.editorpane();
-        Scroll6 = new widget.ScrollPane();
-        LoadHTMLSbar = new widget.editorpane();
         internalFrame2 = new widget.InternalFrame();
         Scroll = new widget.ScrollPane();
         LoadHTMLRiwayatPerawatan = new widget.editorpane();
@@ -781,7 +685,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         WindowPhrase.getContentPane().add(internalFrame8, java.awt.BorderLayout.CENTER);
 
         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-04-2026 06:40:20" }));
+        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "15-05-2026 15:08:59" }));
         Tanggal.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         Tanggal.setName("Tanggal"); // NOI18N
         Tanggal.setOpaque(false);
@@ -1042,16 +946,6 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         Scroll2.setViewportView(LoadHTMLSOAPI);
 
         TabRawat.addTab("Riwayat S.O.A.P.I.E", Scroll2);
-
-        Scroll6.setBorder(null);
-        Scroll6.setName("Scroll6"); // NOI18N
-        Scroll6.setOpaque(true);
-
-        LoadHTMLSbar.setBorder(null);
-        LoadHTMLSbar.setName("LoadHTMLSbar"); // NOI18N
-        Scroll6.setViewportView(LoadHTMLSbar);
-
-        TabRawat.addTab("Riwayat SBAR", Scroll6);
 
         internalFrame2.setBackground(new java.awt.Color(235, 255, 235));
         internalFrame2.setBorder(null);
@@ -3075,22 +2969,17 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     break;
                 case 1:
                     panggilLaporan(LoadHTMLSOAPI.getText()); 
-                    break;
-                //CUSTOM RS ISLAM LMJ, Selasa, 10 Maret 2026
+                    break;                
                 case 2:
-                    panggilLaporan(LoadHTMLSbar.getText()); 
-                    break;
-                //--------------------------------------------------------------
-                case 3:
                     panggilLaporan(LoadHTMLRiwayatPerawatan.getText()); 
                     break;
-                case 4:
+                case 3:
                     panggilLaporan(LoadHTMLPembelian.getText()); 
                     break;
-                case 5:
+                case 4:
                     panggilLaporan(LoadHTMLPiutang.getText()); 
                     break;
-                case 6:
+                case 5:
                     panggilLaporan(LoadHTMLRetensi.getText()); 
                     break;
                 default:
@@ -3112,35 +3001,13 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         if (NoRM.getText().trim().isEmpty() || NmPasien.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Pasien masih kosong...!!!");
             return;
-        }
+        }        
+        //CUSTOM RSIL
         if (TabRawat.getSelectedIndex() == 0 && tabDipindahkan == false) {
             TabRawat.setSelectedIndex(1);
             tabDipindahkan = true;
         }
-        if (TabRawat.getSelectedIndex() == 3) {
-            Object[] options = {"Riwayat Penunjang Medis", "Semua Riwayat"};
-            String input;
-            i = 0;
-            try {
-                input = (String) JOptionPane.showInputDialog(null,"Silahkan pilih yang mau ditampilkan!","Riwayat Perawatan",JOptionPane.QUESTION_MESSAGE,null,options,"Riwayat Penunjang Medis");
-
-                switch (input) {
-                    case "Riwayat Penunjang Medis":
-                        i = 1;
-                        break;
-
-                    case "Semua Riwayat":
-                        i = 2;
-                        break;
-                }
-            } catch (Exception e) {
-                i = 0;
-            }
-            if (i > 0) {
-                PilihanRiwayatPenunjang(i);
-            }
-        }
-
+        
         switch (TabRawat.getSelectedIndex()) {
             case 0:
                 runBackground(() -> tampilKunjungan());
@@ -3149,20 +3016,17 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 runBackground(() -> tampilSoapi());
                 break;
             case 2:
-                runBackground(() -> tampilSbar());
-                break;
-            case 3:
                 esign = false;
                 sertisign = false;
                 runBackground(() -> tampilPerawatan());
                 break;
-            case 4:
+            case 3:
                 runBackground(() -> tampilPembelian());
                 break;
-            case 5:
+            case 4:
                 runBackground(() -> tampilPiutang());
                 break;
-            case 6:
+            case 5:
                 runBackground(() -> tampilRetensi());
                 break;
             default:
@@ -3674,7 +3538,11 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     }//GEN-LAST:event_ChkTampilPhraseActionPerformed
 
     private void TabRawatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabRawatMouseClicked
-        BtnCari1ActionPerformed(null);
+        //CUSTOM RSIL
+        if (TabRawat.getSelectedIndex() == 2) {
+            pilihanRiwayatPerawatan();
+        }
+     BtnCari1ActionPerformed(null);
     }//GEN-LAST:event_TabRawatMouseClicked
 
     private void chkSemuaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSemuaItemStateChanged
@@ -4105,9 +3973,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 try {
                     R4.setSelected(true);
                     NoRawat.setText(tabModeRegistrasi.getValueAt(tbRegistrasi.getSelectedRow(),1).toString());
-                    //CUSTOM RS ISLAM LMJ - Rabu, 03 Maret 2026
-                    //TabRawat dari 2 menjadi 3 karena menambahkan tab SBAR
-                    TabRawat.setSelectedIndex(3);
+                    TabRawat.setSelectedIndex(2);
                     tampilPerawatan();
                 } catch (java.lang.NullPointerException e) {
                     
@@ -4160,7 +4026,6 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.editorpane LoadHTMLRetensi;
     private widget.editorpane LoadHTMLRiwayatPerawatan;
     private widget.editorpane LoadHTMLSOAPI;
-    private widget.editorpane LoadHTMLSbar;
     private javax.swing.JMenuItem MnGeneratePDF;
     private javax.swing.JMenuItem MnGeneratePDFESign;
     private javax.swing.JMenuItem MnGeneratePDFSertiSign;
@@ -4182,7 +4047,6 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.ScrollPane Scroll3;
     private widget.ScrollPane Scroll4;
     private widget.ScrollPane Scroll5;
-    private widget.ScrollPane Scroll6;
     private widget.ScrollPane ScrollMenu;
     private widget.TextBox StatusNikah;
     private javax.swing.JTabbedPane TabRawat;
@@ -5496,11 +5360,12 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                        
                         try{
                             rs2=koneksi.prepareStatement(
+                                    //CUSTOM RSIL
                                     "select laporan_operasi.tanggal,laporan_operasi.diagnosa_preop,laporan_operasi.diagnosa_postop,laporan_operasi.jaringan_dieksekusi,laporan_operasi.selesaioperasi,laporan_operasi.permintaan_pa,laporan_operasi.laporan_operasi,"+
-                                    "laporan_operasi.nomor_implan from laporan_operasi where no_rawat='"+rs.getString("no_rawat")+"' group by no_rawat,tanggal order by tanggal").executeQuery();
+                                    "laporan_operasi.nm_operasi,laporan_operasi.no_pendaftaran_imp from laporan_operasi where no_rawat='"+rs.getString("no_rawat")+"' group by no_rawat,tanggal order by tanggal").executeQuery();
                             if(rs2.next()){   
-                                if(!rs2.getString("nomor_implan").equals("")){
-                                    get = new GetMethod("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/penggajian/generateqrcode2.php?barcode="+rs2.getString("nomor_implan").replaceAll(" ","_").replaceAll("/","garing").replaceAll("#","cross"));
+                                if(!rs2.getString("no_pendaftaran_imp").equals("")){
+                                    get = new GetMethod("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/penggajian/generateqrcode2.php?barcode="+rs2.getString("no_pendaftaran_imp").replaceAll(" ","_").replaceAll("/","garing").replaceAll("#","cross"));
                                     http.executeMethod(get);
                                 }
                             
@@ -5510,11 +5375,18 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                 w=1;
                                 do{
                                     htmlContent.append(
+                                            
                                          "<tr>").append(
                                             "<td valign='top' width='4%' align='center'>").append(w).append("</td>").append(
                                             "<td valign='top' width='21%'>Mulai Operasi</td>").append(
                                             "<td valign='top' width='60%'>:&nbsp;").append(rs2.getString("tanggal")).append("</td>").append(
-                                            "<td valign='top' width='15%' rowspan='6' align='center'>Nomor Implan<br>").append((rs2.getString("nomor_implan").equals("")?"":"<img width='70' height='70' src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/penggajian/temp/"+rs2.getString("nomor_implan").replaceAll(" ","_").replaceAll("/","garing").replaceAll("#","cross")+".png'/><br>"+rs2.getString("nomor_implan"))).append("</td>").append(
+                                            "<td valign='top' width='15%' rowspan='7' align='center'>Nomor Implan<br>").append((rs2.getString("no_pendaftaran_imp").equals("")?"":"<img width='70' height='70' src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/penggajian/temp/"+rs2.getString("no_pendaftaran_imp").replaceAll(" ","_").replaceAll("/","garing").replaceAll("#","cross")+".png'/><br>"+rs2.getString("no_pendaftaran_imp"))).append("</td>").append(
+                                         "</tr>").append(
+                                         //CUSTOM RSIL
+                                         "<tr>").append(
+                                            "<td valign='top' width='4%' align='center'></td>").append(
+                                            "<td valign='top' width='21%'>Nama Operasi</td>").append(
+                                            "<td valign='top' width='60%'>:&nbsp;").append(rs2.getString("nm_operasi")).append("</td>").append(
                                          "</tr>").append(
                                          "<tr>").append(
                                             "<td valign='top' width='4%' align='center'></td>").append(
@@ -6807,7 +6679,9 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             do{
                                 htmlContent.append("<tr class='isi'>").
                                                 append("<td align='center'>").append(rs2.getString("tgl_perawatan")).append("<br>").append(rs2.getString("jam_rawat")).append("</td>").
-                                                append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).append("<br><br>").append(statusVerifikasi(rs2, rs.getString("no_rawat"))).append("</td>").
+                                                append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).
+                                                    //CUSTOM RSIL
+                                                    append("<br><br>").append(statusVerifikasi(rs2, rs.getString("no_rawat"), "ralan")).append("</td>"). //--> CUSTOM RSIL
                                                 append("<td align='left'>").append(rs2.getString("keluhan").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
                                                 append("<td align='left'>").append(rs2.getString("pemeriksaan").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append(rs2.getString("alergi").equals("")?"":"<br>Alergi : "+rs2.getString("alergi")).append(rs2.getString("suhu_tubuh").equals("")?"":"<br>Suhu(C) : "+rs2.getString("suhu_tubuh")).append(rs2.getString("tensi").equals("")?"":"<br>Tensi : "+rs2.getString("tensi")).append(rs2.getString("nadi").equals("")?"":"<br>Nadi(/menit) : "+rs2.getString("nadi")).append(rs2.getString("respirasi").equals("")?"":"<br>Respirasi(/menit) : "+rs2.getString("respirasi")).append(rs2.getString("tinggi").equals("")?"":"<br>Tinggi(Cm) : "+rs2.getString("tinggi")).append(rs2.getString("berat").equals("")?"":"<br>Berat(Kg) : "+rs2.getString("berat")).append(rs2.getString("lingkar_perut").equals("")?"":"<br>Lingkar Perut(Cm) : "+rs2.getString("lingkar_perut")).append(rs2.getString("spo2").equals("")?"":"<br>SpO2(%) : "+rs2.getString("spo2")).append(rs2.getString("gcs").equals("")?"":"<br>GCS(E,V,M) : "+rs2.getString("gcs")).append(rs2.getString("kesadaran").equals("")?"":"<br>Kesadaran : "+rs2.getString("kesadaran")).append("</td>").
                                                 append("<td align='left'>").append(rs2.getString("penilaian").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
@@ -6834,11 +6708,16 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                 "pemeriksaan_ranap.nadi,pemeriksaan_ranap.respirasi,pemeriksaan_ranap.tinggi, " +
                                 "pemeriksaan_ranap.berat,pemeriksaan_ranap.spo2,pemeriksaan_ranap.gcs,pemeriksaan_ranap.kesadaran,pemeriksaan_ranap.keluhan, " +
                                 "pemeriksaan_ranap.pemeriksaan,pemeriksaan_ranap.alergi,pemeriksaan_ranap.penilaian,pemeriksaan_ranap.rtl,"+
-                                "pemeriksaan_ranap.instruksi,pemeriksaan_ranap.evaluasi,pemeriksaan_ranap.nip,pegawai.nama,pegawai.jbtn "+
-                                "from pasien inner join reg_periksa on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                                "pemeriksaan_ranap.instruksi,pemeriksaan_ranap.evaluasi,pemeriksaan_ranap.nip,pegawai.nama,pegawai.jbtn,"+
+                                        "case when pemeriksaan_ranap_validasi.no_rawat is not null then 'Tervalidasi' else 'Belum Divalidasi' end as status_validasi,"+
+                                        "pemeriksaan_ranap_validasi.nik_validator,pemeriksaan_ranap_validasi.tgl_validasi,pemeriksaan_ranap_validasi.jam_validasi "+
+                                "from pasien inner join reg_periksa on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+                
                                 "inner join pemeriksaan_ranap on pemeriksaan_ranap.no_rawat=reg_periksa.no_rawat "+
-                                "inner join pegawai on pemeriksaan_ranap.nip=pegawai.nik where pemeriksaan_ranap.no_rawat=? "+
-                                "order by pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat");
+                                "inner join pegawai on pemeriksaan_ranap.nip=pegawai.nik "+
+                                        "left join pemeriksaan_ranap_validasi on (pemeriksaan_ranap.no_rawat = pemeriksaan_ranap_validasi.no_rawat and "+
+                                        "pemeriksaan_ranap.tgl_perawatan = pemeriksaan_ranap_validasi.tgl_perawatan and "+
+                                        "pemeriksaan_ranap.jam_rawat = pemeriksaan_ranap_validasi.jam_rawat)"+
+                                "where pemeriksaan_ranap.no_rawat=? order by pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat");
                     try {
                         ps2.setString(1,rs.getString("no_rawat"));
                         rs2=ps2.executeQuery();
@@ -6856,7 +6735,9 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                             do{
                                 htmlContent.append("<tr class='isi'>").
                                                 append("<td align='center'>").append(rs2.getString("tgl_perawatan")).append("<br>").append(rs2.getString("jam_rawat")).append("</td>").
-                                                append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).append("</td>").
+                                                append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).
+                                                    //CUSTOM RSIL
+                                                    append("<br><br>").append(statusVerifikasi(rs2, rs.getString("no_rawat"), "ranap")).append("</td>").
                                                 append("<td align='left'>").append(rs2.getString("keluhan").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
                                                 append("<td align='left'>").append(rs2.getString("pemeriksaan").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append(rs2.getString("alergi").equals("")?"":"<br>Alergi : "+rs2.getString("alergi")).append(rs2.getString("suhu_tubuh").equals("")?"":"<br>Suhu(C) : "+rs2.getString("suhu_tubuh")).append(rs2.getString("tensi").equals("")?"":"<br>Tensi : "+rs2.getString("tensi")).append(rs2.getString("nadi").equals("")?"":"<br>Nadi(/menit) : "+rs2.getString("nadi")).append(rs2.getString("respirasi").equals("")?"":"<br>Respirasi(/menit) : "+rs2.getString("respirasi")).append(rs2.getString("tinggi").equals("")?"":"<br>Tinggi(Cm) : "+rs2.getString("tinggi")).append(rs2.getString("berat").equals("")?"":"<br>Berat(Kg) : "+rs2.getString("berat")).append(rs2.getString("spo2").equals("")?"":"<br>SpO2(%) : "+rs2.getString("spo2")).append(rs2.getString("gcs").equals("")?"":"<br>GCS(E,V,M) : "+rs2.getString("gcs")).append(rs2.getString("kesadaran").equals("")?"":"<br>Kesadaran : "+rs2.getString("kesadaran")).append("</td>").
                                                 append("<td align='left'>").append(rs2.getString("penilaian").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
@@ -7336,489 +7217,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             System.out.println("Notifikasi : "+e);
         }
     }
-    
-     //CUSTOMM (TAMBAH)
-    //--------------------------------------------------------------------------
-    private void tampilSbar() {
-        try {
-            htmlContent = new StringBuilder();
-            htmlContent.append("<tr class='isi'>").
-                            append("<td valign='middle' bgcolor='#FFFAF8' align='center' width='5%'>Tgl.Reg</td>").
-                            append("<td valign='middle' bgcolor='#FFFAF8' align='center' width='8%'>No.Rawat</td>").
-                            append("<td valign='middle' bgcolor='#FFFAF8' align='center' width='3%'>Status</td>").
-                            append("<td valign='middle' bgcolor='#FFFAF8' align='center' width='84%'>S.B.A.R</td>").
-                        append("</tr>");     
-            if(R1.isSelected()==true){
-                ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.status_lanjut "+
-                    "from reg_periksa where reg_periksa.stts<>'Batal' and reg_periksa.no_rkm_medis=? order by reg_periksa.tgl_registrasi desc limit 5");
-            }else if(R2.isSelected()==true){
-                ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.status_lanjut "+
-                    "from reg_periksa where reg_periksa.stts<>'Batal' and reg_periksa.no_rkm_medis=? order by reg_periksa.tgl_registrasi");
-            }else if(R3.isSelected()==true){
-                ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.status_lanjut "+
-                    "from reg_periksa where reg_periksa.stts<>'Batal' and reg_periksa.no_rkm_medis=? and "+
-                    "reg_periksa.tgl_registrasi between ? and ? order by reg_periksa.tgl_registrasi");
-            }else if(R4.isSelected()==true){
-                ps=koneksi.prepareStatement(
-                    "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.status_lanjut "+
-                    "from reg_periksa where reg_periksa.stts<>'Batal' and reg_periksa.no_rkm_medis=? and reg_periksa.no_rawat=?");
-            }
-            try {
-                if(R1.isSelected()==true){
-                    ps.setString(1,NoRM.getText().trim());
-                }else if(R2.isSelected()==true){
-                    ps.setString(1,NoRM.getText().trim());
-                }else if(R3.isSelected()==true){
-                    ps.setString(1,NoRM.getText().trim());
-                    ps.setString(2,Valid.SetTgl(Tgl1.getSelectedItem()+""));
-                    ps.setString(3,Valid.SetTgl(Tgl2.getSelectedItem()+""));
-                }else if(R4.isSelected()==true){
-                    ps.setString(1,NoRM.getText().trim());
-                    ps.setString(2,NoRawat.getText().trim());
-                }  
-                rs=ps.executeQuery();
-                while(rs.next()){
-                    htmlContent.append("<tr class='isi'>").
-                                    append("<td valign='top' align='center'>").append(rs.getString("tgl_registrasi")).append("</td>").
-                                    append("<td valign='top' align='center'>").append(rs.getString("no_rawat")).append("</td>").
-                                    append("<td valign='top' align='center'>").append(rs.getString("status_lanjut")).append("</td>").
-                                    append("<td valign='top' align='center'>").
-                                        append("<table width='100%' border='0' align='center' cellpadding='2px' cellspacing='0'>");
-                    try {
-                        rs2=koneksi.prepareStatement(
-                                "select pemeriksaan_ralan_sbar.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,"+
-                                "pemeriksaan_ralan_sbar.tgl_perawatan,pemeriksaan_ralan_sbar.jam_rawat, " +
-                                "pemeriksaan_ralan_sbar.situation,pemeriksaan_ralan_sbar.background,pemeriksaan_ralan_sbar.assesment," +
-                                "pemeriksaan_ralan_sbar.recommendation,pemeriksaan_ralan_sbar.advis," +
-                                "pemeriksaan_ralan_sbar.nip, pegawai.nama, pegawai.jbtn, case when pemeriksaan_ralan_sbar_validasi.no_rawat is not null then 'Tervalidasi' else 'Belum Divalidasi' end as status_validasi, "+
-                                "pemeriksaan_ralan_sbar_validasi.nik_validator,pemeriksaan_ralan_sbar_validasi.tgl_validasi,pemeriksaan_ralan_sbar_validasi.jam_validasi "+
-                                "from pasien inner join reg_periksa on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                                "inner join pemeriksaan_ralan_sbar on reg_periksa.no_rawat = pemeriksaan_ralan_sbar.no_rawat "+
-                                "inner join pegawai on pemeriksaan_ralan_sbar.nip=pegawai.nik "+
-                                "left join pemeriksaan_ralan_sbar_validasi ON" +
-                                    "(pemeriksaan_ralan_sbar.no_rawat = pemeriksaan_ralan_sbar_validasi.no_rawat and " +
-                                    "pemeriksaan_ralan_sbar.tgl_perawatan = pemeriksaan_ralan_sbar_validasi.tgl_perawatan and " +
-                                    "pemeriksaan_ralan_sbar.jam_rawat = pemeriksaan_ralan_sbar_validasi.jam_rawat)" +
-                                "where pemeriksaan_ralan_sbar.no_rawat='"+rs.getString("no_rawat")+"' "+
-                                "order by pemeriksaan_ralan_sbar.tgl_perawatan,pemeriksaan_ralan_sbar.jam_rawat").executeQuery();
-                        if(rs2.next()){
-                            htmlContent.append("<tr class='isi'>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='7%'>Tanggal</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Dokter/Paramedis</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Situation </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Background </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Assessment </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Recommendation </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Advis</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Verifikasi</td>").
-                                        append("</tr>");
-                            do{
-                                htmlContent.append("<tr class='isi'>").
-                                        append("<td align='center'>").append(rs2.getString("tgl_perawatan")).append("<br>").append(rs2.getString("jam_rawat")).append("</td>").
-                                        append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("situation").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("background").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("assesment").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("recommendation").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("advis").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>");
-                                
-                                // KOLOM STATUS VALIDASI DENGAN BUTTON
-                                String statusValidasi = rs2.getString("status_validasi");
-                                String noRawat = rs2.getString("no_rawat");
-                                String tglPerawatan = rs2.getString("tgl_perawatan");
-                                String jamRawat = rs2.getString("jam_rawat");
-                                String dokter = Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik='"+rs2.getString("nik_validator")+"'");
-                                
-
-                                htmlContent.append("<td align='center'>");
-                                if ("Belum Divalidasi".equals(statusValidasi)) {
-                                    htmlContent.append("<a href='validasi_ralan:")
-                                            .append(noRawat).append(",")
-                                            .append(tglPerawatan).append(",")
-                                            .append(jamRawat).append("'>")
-                                            .append("<font color='white' style='background:#28a745;'>")
-                                            .append("Verifikasi")
-                                            .append("</font>")
-                                            .append("</a>");
-                                } else {
-                                    if (TAMPILBARCODESBAR.equals("yes")) {
-                                        get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
-                                                + "/penggajian/generateqrcode.php?kodedokter=" + rs2.getString("nik_validator").replace(" ", "_"));
-                                        http.executeMethod(get);
-
-                                        // tampilkan barcode + nama + tanggal validasi
-                                        htmlContent.append("<img src='http://")
-                                                .append(koneksiDB.HOSTHYBRIDWEB()).append(":")
-                                                .append(koneksiDB.PORTWEB()).append("/")
-                                                .append(koneksiDB.HYBRIDWEB()).append("/penggajian/temp/")
-                                                .append(rs2.getString("nik_validator")).append(".png' width='120' height='120'/><br>")
-                                                .append("<font>")
-                                                .append(dokter).append("<br>")
-                                                .append(rs2.getString("tgl_validasi")).append(" ").append(rs2.getString("jam_validasi"))
-                                                .append("</font><br><br>");
-
-                                        // tombol hapus verifikasi
-                                        htmlContent.append("<a href='hapus_validasi_ralan:")
-                                                .append(noRawat).append(",")
-                                                .append(tglPerawatan).append(",")
-                                                .append(jamRawat).append("'>")
-                                                .append("<font color='white' style='background:#dc3545;'>")
-                                                .append("Hapus Verifikasi")
-                                                .append("</font>")
-                                                .append("</a>");
-                                    } else {
-                                        get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
-                                                + "/penggajian/generateqrcode.php?kodedokter=" + rs2.getString("nik_validator").replace(" ", "_"));
-                                        http.executeMethod(get);
-                                        
-                                        htmlContent.append("<font>")
-                                                .append(dokter).append("<br>")
-                                                .append(rs2.getString("tgl_validasi")).append(" ").append(rs2.getString("jam_validasi"))
-                                                .append("</font><br><br>");
-
-                                        // tombol hapus verifikasi
-                                        htmlContent.append("<a href='hapus_validasi_ralan:")
-                                                .append(noRawat).append(",")
-                                                .append(tglPerawatan).append(",")
-                                                .append(jamRawat).append("'>")
-                                                .append("<font color='white' style='background:#dc3545;'>")
-                                                .append("Hapus Verifikasi")
-                                                .append("</font>")
-                                                .append("</a>");
-                                    }
-                                }
-                                htmlContent.append("</td>");
-                            }while(rs2.next());
-                        }       
-                    } catch (Exception e) {
-                        System.out.println("Notifikasi : "+e);
-                    } finally{
-                        if(rs2!=null){
-                            rs2.close();
-                        }
-                    }
-                    
-                    try {
-                        rs2=koneksi.prepareStatement(
-                                "select pemeriksaan_ranap_sbar.no_rawat,reg_periksa.no_rkm_medis,pasien.nm_pasien,"+
-                                "pemeriksaan_ranap_sbar.tgl_perawatan,pemeriksaan_ranap_sbar.jam_rawat, " +
-                                "pemeriksaan_ranap_sbar.situation,pemeriksaan_ranap_sbar.background,pemeriksaan_ranap_sbar.assesment," +
-                                "pemeriksaan_ranap_sbar.recommendation,pemeriksaan_ranap_sbar.advis," +
-                                "pemeriksaan_ranap_sbar.nip, pegawai.nama, pegawai.jbtn, CASE WHEN validasi_pemeriksaan_sbar.no_rawat IS NOT NULL THEN 'Tervalidasi' ELSE 'Belum Divalidasi' END as status_validasi, "+
-                                "validasi_pemeriksaan_sbar.nik_validator,validasi_pemeriksaan_sbar.tgl_validasi,validasi_pemeriksaan_sbar.jam_validasi "+
-                                "from pasien inner join reg_periksa on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                                "inner join pemeriksaan_ranap_sbar on reg_periksa.no_rawat = pemeriksaan_ranap_sbar.no_rawat "+
-                                "inner join pegawai on pemeriksaan_ranap_sbar.nip=pegawai.nik "+
-                                "LEFT JOIN validasi_pemeriksaan_sbar ON" +
-                                    "(pemeriksaan_ranap_sbar.no_rawat = validasi_pemeriksaan_sbar.no_rawat AND " +
-                                    "pemeriksaan_ranap_sbar.tgl_perawatan = validasi_pemeriksaan_sbar.tgl_perawatan AND " +
-                                    "pemeriksaan_ranap_sbar.jam_rawat = validasi_pemeriksaan_sbar.jam_rawat)" +
-                                "where pemeriksaan_ranap_sbar.no_rawat='"+rs.getString("no_rawat")+"' "+
-                                "order by pemeriksaan_ranap_sbar.tgl_perawatan,pemeriksaan_ranap_sbar.jam_rawat").executeQuery();
-                        if(rs2.next()){
-                            htmlContent.append("<tr class='isi'>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='7%'>Tanggal</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Dokter/Paramedis</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Situation </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Background </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='13%'>Assessment </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Recommendation </td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Advis</td>").
-                                            append("<td valign='middle' bgcolor='#FFFFF8' align='center' width='14%'>Verifikasi</td>").
-                                        append("</tr>");
-                            do{
-                                htmlContent.append("<tr class='isi'>").
-                                        append("<td align='center'>").append(rs2.getString("tgl_perawatan")).append("<br>").append(rs2.getString("jam_rawat")).append("</td>").
-                                        append("<td align='center'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("situation").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("background").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("assesment").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("recommendation").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>").
-                                        append("<td align='left'>").append(rs2.getString("advis").replaceAll("(\r\n|\r|\n|\n\r)", "<br>")).append("</td>");
-                                
-                                // KOLOM STATUS VALIDASI DENGAN BUTTON
-                                String statusValidasi = rs2.getString("status_validasi");
-                                String noRawat = rs2.getString("no_rawat");
-                                String tglPerawatan = rs2.getString("tgl_perawatan");
-                                String jamRawat = rs2.getString("jam_rawat");
-                                String dokter = Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik='"+rs2.getString("nik_validator")+"'");
-                                
-
-                                htmlContent.append("<td align='center'>");
-                                if ("Belum Divalidasi".equals(statusValidasi)) {
-                                    htmlContent.append("<a href='validasi:")
-                                            .append(noRawat).append(",")
-                                            .append(tglPerawatan).append(",")
-                                            .append(jamRawat).append("'>")
-                                            .append("<font color='white' style='background:#28a745;'>")
-                                            .append("Verifikasi")
-                                            .append("</font>")
-                                            .append("</a>");
-                                } else {
-                                    if (TAMPILBARCODESBAR.equals("yes")) {
-                                        get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
-                                                + "/penggajian/generateqrcode.php?kodedokter=" + rs2.getString("nik_validator").replace(" ", "_"));
-                                        http.executeMethod(get);
-
-                                        // tampilkan barcode + nama + tanggal validasi
-                                        htmlContent.append("<img src='http://")
-                                                .append(koneksiDB.HOSTHYBRIDWEB()).append(":")
-                                                .append(koneksiDB.PORTWEB()).append("/")
-                                                .append(koneksiDB.HYBRIDWEB()).append("/penggajian/temp/")
-                                                .append(rs2.getString("nik_validator")).append(".png' width='120' height='120'/><br>")
-                                                .append("<font>")
-                                                .append(dokter).append("<br>")
-                                                .append(rs2.getString("tgl_validasi")).append(" ").append(rs2.getString("jam_validasi"))
-                                                .append("</font><br><br>");
-
-                                        // tombol hapus verifikasi
-                                        htmlContent.append("<a href='hapus_validasi:")
-                                                .append(noRawat).append(",")
-                                                .append(tglPerawatan).append(",")
-                                                .append(jamRawat).append("'>")
-                                                .append("<font color='white' style='background:#dc3545;'>")
-                                                .append("Hapus Verifikasi")
-                                                .append("</font>")
-                                                .append("</a>");
-                                    } else {
-                                        get = new GetMethod("http://" + koneksiDB.HOSTHYBRIDWEB() + ":" + koneksiDB.PORTWEB() + "/" + koneksiDB.HYBRIDWEB()
-                                                + "/penggajian/generateqrcode.php?kodedokter=" + rs2.getString("nik_validator").replace(" ", "_"));
-                                        http.executeMethod(get);
-                                        
-                                        htmlContent.append("<font>")
-                                                .append(dokter).append("<br>")
-                                                .append(rs2.getString("tgl_validasi")).append(" ").append(rs2.getString("jam_validasi"))
-                                                .append("</font><br><br>");
-
-                                        // tombol hapus verifikasi
-                                        htmlContent.append("<a href='hapus_validasi:")
-                                                .append(noRawat).append(",")
-                                                .append(tglPerawatan).append(",")
-                                                .append(jamRawat).append("'>")
-                                                .append("<font color='white' style='background:#dc3545;'>")
-                                                .append("Hapus Verifikasi")
-                                                .append("</font>")
-                                                .append("</a>");
-                                    }
-                                }
-                                htmlContent.append("</td>");
-                            }while(rs2.next());
-                        }       
-                    } catch (Exception e) {
-                        System.out.println("Notifikasi : "+e);
-                    } finally{
-                        if(rs2!=null){
-                            rs2.close();
-                        }
-                    }
-                    htmlContent.append("</table>").
-                               append("</td>").
-                            append("</tr>");
-                }
-            } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
-                    rs.close();
-                }
-                if(ps!=null){
-                    ps.close();
-                }
-            }
-            
-            LoadHTMLSbar.setText(
-                    "<html>"+
-                      "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"+
-                       htmlContent.toString()+
-                      "</table>"+
-                    "</html>");
-            htmlContent=null;
-        } catch (Exception e) {
-            System.out.println("Notif SBAR : "+e);
-        } 
-    }
-    //--------------------------------------------------------------------------
-    
-    //CUSTOMM (TAMBAH)
-    //--------------------------------------------------------------------------
-    private void initHyperlinkListenerSBAR() {
-        LoadHTMLSbar.setContentType("text/html");
-        LoadHTMLSbar.setEditable(false);
-
-        // Hapus listener lama
-        for (javax.swing.event.HyperlinkListener hl : LoadHTMLSbar.getHyperlinkListeners()) {
-            LoadHTMLSbar.removeHyperlinkListener(hl);
-        }
-
-        // Tambahkan listener baru
-        LoadHTMLSbar.addHyperlinkListener(evt -> {
-            if (evt.getEventType() != javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
-                return;
-            }
-
-            String desc = evt.getDescription();
-            java.net.URL url = evt.getURL();
-            if (desc == null && url != null) {
-                desc = url.toString();
-            }
-            if (desc == null) {
-                return;
-            }
-
-            // === VALIDASI ===
-            if (desc.startsWith("validasi:")) {
-                String[] parts = desc.substring("validasi:".length()).split(",");
-                if (parts.length < 3) {
-                    return;
-                }
-
-                String noRawat = parts[0];
-                String tglPerawatan = parts[1];
-                String jamRawat = parts[2];
-
-                int ok = JOptionPane.showConfirmDialog(
-                        null, "Apakah Anda yakin ingin melakukan Validasi?\nNo. Rawat: " + noRawat,
-                        "Konfirmasi Validasi", JOptionPane.YES_NO_OPTION
-                );
-                if (ok == JOptionPane.YES_OPTION) {
-                    if (Sequel.cariInteger("select count(*) from dpjp_ranap where dpjp_ranap.kd_dokter=?", akses.getkode()) > 0) {
-                        Sequel.menyimpan("validasi_pemeriksaan_sbar",
-                                "?,?,?,?,?,?,?", "Validasi SBAR", 7, new String[]{
-                                    noRawat,
-                                    tglPerawatan,
-                                    jamRawat,
-                                    akses.getkode(), // nik validator
-                                    Sequel.cariIsi("select CURRENT_DATE()"),
-                                    Sequel.cariIsi("select CURRENT_TIME()"),
-                                    "Validasi"
-                                }
-                        );
-                        tampilSbar();
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null,
-                                "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
-                    }
-                }
-                return;
-            }
-
-            // === HAPUS VALIDASI ===
-            if (desc.startsWith("hapus_validasi:")) {
-                String[] parts = desc.substring("hapus_validasi:".length()).split(",");
-                if (parts.length < 3) {
-                    return;
-                }
-
-                String noRawat = parts[0];
-                String tglPerawatan = parts[1];
-                String jamRawat = parts[2];
-
-                int ok = JOptionPane.showConfirmDialog(
-                        null, "Apakah Anda yakin ingin menghapus validasi?\nNo. Rawat: " + noRawat,
-                        "Konfirmasi Hapus Validasi", JOptionPane.YES_NO_OPTION
-                );
-                if (ok == JOptionPane.YES_OPTION) {
-                    
-                    if (Sequel.cariInteger("select count(*) from validasi_pemeriksaan_sbar where validasi_pemeriksaan_sbar.no_rawat='"+noRawat+"' and validasi_pemeriksaan_sbar.tgl_perawatan='"+tglPerawatan+"' and validasi_pemeriksaan_sbar.jam_rawat='"+jamRawat+"' and validasi_pemeriksaan_sbar.nik_validator=?", akses.getkode()) > 0) {
-                        Sequel.queryu("delete from validasi_pemeriksaan_sbar "
-                                + "where no_rawat='" + noRawat + "' "
-                                + "and tgl_perawatan='" + tglPerawatan + "' "
-                                + "and jam_rawat='" + jamRawat + "'");
-                        tampilSbar();
-                    } else {
-                        JOptionPane.showMessageDialog(null,
-                                "Hanya bisa dihapus oleh DPJP yang bersangkutan..!!");
-                    }
-                }
-                return;
-            }
-            
-            if (desc.startsWith("validasi_ralan:")) {
-                String[] parts = desc.substring("validasi_ralan:".length()).split(",");
-                if (parts.length < 3) {
-                    return;
-                }
-
-                String noRawat = parts[0];
-                String tglPerawatan = parts[1];
-                String jamRawat = parts[2];
-
-                int ok = JOptionPane.showConfirmDialog(
-                        null, "Apakah Anda yakin ingin melakukan Validasi?\nNo. Rawat " + noRawat+", Tgl Rawat "+ tglPerawatan+", Jam Rawat "+jamRawat,
-                        "Konfirmasi Validasi", JOptionPane.YES_NO_OPTION
-                );
-                if (ok == JOptionPane.YES_OPTION) {
-                    if (Sequel.cariInteger("select count(*) from dpjp_ranap where dpjp_ranap.kd_dokter=?", akses.getkode()) > 0) {
-                        Sequel.menyimpan("pemeriksaan_ralan_sbar_validasi",
-                                "?,?,?,?,?,?,?", "Validasi SBAR", 7, new String[]{
-                                    noRawat,
-                                    tglPerawatan,
-                                    jamRawat,
-                                    akses.getkode(), // nik validator
-                                    Sequel.cariIsi("select CURRENT_DATE()"),
-                                    Sequel.cariIsi("select CURRENT_TIME()"),
-                                    "Validasi"
-                                }
-                        );
-                        tampilSbar();
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null,
-                                "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
-                    }
-                }
-                return;
-            }
-
-            // === HAPUS VALIDASI ===
-            if (desc.startsWith("hapus_validasi_ralan:")) {
-                String[] parts = desc.substring("hapus_validasi_ralan:".length()).split(",");
-                if (parts.length < 3) {
-                    return;
-                }
-
-                String noRawat = parts[0];
-                String tglPerawatan = parts[1];
-                String jamRawat = parts[2];
-
-                int ok = JOptionPane.showConfirmDialog(
-                        null, "Apakah Anda yakin ingin menghapus validasi?\nNo. Rawat: " + noRawat,
-                        "Konfirmasi Hapus Validasi", JOptionPane.YES_NO_OPTION
-                );
-                if (ok == JOptionPane.YES_OPTION) {
-                    
-                    if (Sequel.cariInteger("select count(*) from pemeriksaan_ralan_sbar_validasi where pemeriksaan_ralan_sbar_validasi.no_rawat='"+noRawat+"' and pemeriksaan_ralan_sbar_validasi.tgl_perawatan='"+tglPerawatan+"' and pemeriksaan_ralan_sbar_validasi.jam_rawat='"+jamRawat+"' and pemeriksaan_ralan_sbar_validasi.nik_validator=?", akses.getkode()) > 0) {
-                        Sequel.queryu("delete from pemeriksaan_ralan_sbar_validasi "
-                                + "where no_rawat='" + noRawat + "' "
-                                + "and tgl_perawatan='" + tglPerawatan + "' "
-                                + "and jam_rawat='" + jamRawat + "'");
-                        tampilSbar();
-                    } else {
-                        JOptionPane.showMessageDialog(null,
-                                "Hanya bisa dihapus oleh DPJP yang bersangkutan..!!");
-                    }
-                }
-                return;
-            }
-
-            // === URL normal ===
-            if (desc.startsWith("http://") || desc.startsWith("https://")
-                    || desc.startsWith("file:") || desc.startsWith("mailto:")) {
-                try {
-                    java.awt.Desktop.getDesktop().browse(new java.net.URI(desc));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            } else {
-                System.out.println("Link tidak dikenali: " + desc);
-            }
-        });
-    }
-    
+        
     private void panggilLaporan(String teks) {
         try{
             File g = new File("file.css");            
@@ -37495,416 +36894,157 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
     }
     
-    private void PilihanRiwayatPenunjang(int pilihan) {
+    private void menampilkanKonsultasiPerawat(String norawat) { //--> CUSTOM RSIL
+        try {
+            if(chkKonsultasiPerawat.isSelected()==true){
+                try {
+                    rs2=koneksi.prepareStatement(
+                        "select konsultasi_perawat.no_permintaan,konsultasi_perawat.tanggal as tanggalkonsultasi,konsultasi_perawat.nip,petugas.nama,"+
+                        "konsultasi_perawat.kd_dokter_dikonsuli,dokter.nm_dokter,konsultasi_perawat.situation,konsultasi_perawat.background,konsultasi_perawat.assessment,"+
+                        "konsultasi_perawat.recomendation,jawaban_konsultasi_perawat.tanggal as tanggaljawaban,jawaban_konsultasi_perawat.respon,"+
+                        "jawaban_konsultasi_perawat.instruksi,jawaban_konsultasi_perawat.rencana,"+
+                        "jawaban_konsultasi_perawat_verifikasi.nik_validator,jawaban_konsultasi_perawat_verifikasi.tgl_verifikasi "+
+                        "from konsultasi_perawat inner join petugas on konsultasi_perawat.nip=petugas.nip inner join dokter on konsultasi_perawat.kd_dokter_dikonsuli=dokter.kd_dokter "+
+                        "left join jawaban_konsultasi_perawat on jawaban_konsultasi_perawat.no_permintaan=konsultasi_perawat.no_permintaan "+
+                        "left join jawaban_konsultasi_perawat_verifikasi on jawaban_konsultasi_perawat_verifikasi.no_permintaan=konsultasi_perawat.no_permintaan "+
+                        "where konsultasi_perawat.no_rawat='"+norawat+"' order by konsultasi_perawat.tanggal").executeQuery();
+                    if(rs2.next()){
+                        htmlContent.append("<tr class='isi'>").
+                                        append("<td valign='top' width='2%'></td>").
+                                        append("<td valign='top' width='18%'>Konsultasi Perawat</td>").
+                                        append("<td valign='top' width='1%' align='center'>:</td>").
+                                        append("<td valign='top' width='79%'>").
+                                        append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>");
+                        do{
+                            String noPermintaan  = rs2.getString("no_permintaan");
+                            String nikValidator  = rs2.getString("nik_validator");   // null jika belum verifikasi
+                            String tglVerifikasi = rs2.getString("tgl_verifikasi"); 
+                            
+                            htmlContent.append("<tr>").
+                                            append("<td valign='top'>").
+                                                append("PERMINTAAN KONSULTASI PERAWAT").
+                                                append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'>").
+                                                    //append("<tr>").
+                                                        //append("<td width='33%'>Tanggal : ").append(rs2.getString("tanggalkonsultasi")).append("</td>").
+                                                        //append("<td width='33%'>Perawat : ").append(rs2.getString("nip")).append(" ").append(rs2.getString("nama")).append("</td>").
+                                                        //append("<td width='33%'>Dokter  : ").append(rs2.getString("kd_dokter_dikonsuli")).append(" ").append(rs2.getString("nm_dokter")).append("</td>").
+                                                    //append("</tr>").
+                                                    //CUSTOM RSIL
+                                                    append("<tr>").
+                                                        append("<td align='center' width='10%' bgcolor='#FFFAF8''>Tanggal").append("</td>").
+                                                        append("<td align='center' width='10%' bgcolor='#FFFAF8''>Perawat").append("</td>").
+                                                        append("<td align='center' width='10%' bgcolor='#FFFAF8''>Dokter").append("</td>").
+                                                        append("<td align='center' width='15%' bgcolor='#FFFAF8''>Situation").append("</td>").
+                                                        append("<td align='center' width='15%' bgcolor='#FFFAF8''>Background").append("</td>").
+                                                        append("<td align='center' width='15%' bgcolor='#FFFAF8''>Assessment").append("</td>").
+                                                        append("<td align='center' width='15%' bgcolor='#FFFAF8''>Recommendation").append("</td>").
+                                                    append("</tr>").
+                                                    append("<tr>").
+                                                        append("<td align='center' width='11%'>").append(rs2.getString("tanggalkonsultasi")).append("</td>").
+                                                        append("<td align='center' width='11%'>").append(rs2.getString("nip")).append("<br>").append(rs2.getString("nama")).append("</td>").
+                                                        append("<td align='center' width='11%'>").append(rs2.getString("kd_dokter_dikonsuli")).append("<br>").append(rs2.getString("nm_dokter")).append("</td>").
+                                                        append("<td width='24%'>").append(rs2.getString("situation").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
+                                                        //append("<td align='left'>").append(rs2.getString("keluhan").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
+                                                        append("<td width='24%'>").append(rs2.getString("background").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
+                                                        append("<td width='24%'>").append(rs2.getString("assessment").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
+                                                        append("<td width='25%'>").append(rs2.getString("recomendation").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("(\r\n|\r|\n|\n\r)","<br>")).append("</td>").
+                                                    append("</tr>"). 
+                                                append("</table>").
+                                            append("</td>").
+                                        append("</tr>").
+                                        append("<tr>").
+                                            append("<td valign='top'>").
+                                                append("JAWABAN KONSULTASI").
+                                                append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0px' class='tbl_form'>").
+                                                    append("<tr>").
+                                                        append("<td width='30%'>Tanggal : ").append(rs2.getString("tanggaljawaban")).append("</td>").
+                                                        append("<td width='70%'>Respon : ").append(rs2.getString("respon")).append("</td>").
+                                                    append("</tr>").
+                                                    append("<tr>").
+                                                        append("<td width='100%' colspan='2'>Instruksi : ").append(rs2.getString("instruksi")).append("</td>").
+                                                    append("</tr>").
+                                                    append("<tr>").
+                                                        append("<td width='100%' colspan='2'>Rencana : ").append(rs2.getString("rencana")).append("</td>").
+                                                    append("</tr>").
+                                                    append("<tr>");
+                                                    //CUSTOM RSIL SBAR -> TAMBAHAN KOLOM VERIFIKASI            
+                                                        htmlContent.append("<td width='100%' colspan='2' align='center'>");
+
+                                                        if (nikValidator == null) {
+                                                            // ✅ Belum diverifikasi — tampil tombol hijau
+                                                            htmlContent.append("<a href='validasi_sbar_konsul:").append(noPermintaan).append("'>").append("<font color='white' style='background:#28a745;'>").append("Klik untuk Verifikasi").append("</font>").append("</a>");
+                                                        } else {
+                                                            // ✅ Sudah diverifikasi — tampil info + tombol hapus
+                                                            String namaDokter = Sequel.cariIsi("select dokter.nm_dokter from dokter where dokter.kd_dokter = '" + nikValidator + "'");
+                                                            htmlContent.append("<font color='white' style='background:#28a745;'>").append("Diverifikasi oleh <b>").append(namaDokter).append("</b>").append(" pada tanggal ").append(tglVerifikasi).append("</font>").append(" | ").append("<a href='hapus_validasi_sbar_konsul:").append(noPermintaan).append("'>").append("<font color='white' style='background:#dc3545;'>").append(" Batalkan Verifikasi ").append("</font>").append("</a>");
+                                                        }
+                                                        htmlContent.append("</td>").
+                                                    append("</tr>").
+                                                append("</table>").
+                                            append("</td>").
+                                        append("</tr>");    
+                                        
+                        }while(rs2.next());
+                        htmlContent.append("</table>").
+                                    append("</td>").
+                                    append("</tr>");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notifikasi : "+e);
+                } finally{
+                    if(rs2!=null){
+                        rs2.close();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif Konsultasi Perawat : "+e);
+        }
+    }
+    
+    //CUSTOM RSIL
+    private void PilihanRiwayatPenunjang(int pilihan) { //--> FULL CUSTOM
         switch (pilihan) {
             case 1:
                 chkSemua.setSelected(false);
-                chkTriase.setSelected(false);
-                chkAsuhanKeperawatanRalan.setSelected(false);
-                chkAsuhanKeperawatanRalanGigi.setSelected(false);
-                chkAsuhanKeperawatanRalanBayi.setSelected(false);
-                chkAsuhanKeperawatanRalanKandungan.setSelected(false);
-                chkAsuhanKeperawatanRanap.setSelected(false);
-                chkAsuhanKeperawatanRanapKandungan.setSelected(false);
-                chkAsuhanKeperawatanRanapNeonatus.setSelected(false);
-                chkAsuhanKeperawatanRalanPsikiatri.setSelected(false);
-                chkAsuhanMedisRalan.setSelected(false);
-                chkAsuhanMedisIGD.setSelected(false);
-                chkAsuhanMedisRalanKandungan.setSelected(false);
-                chkAsuhanMedisRalanBayi.setSelected(false);
-                chkAsuhanMedisRalanTHT.setSelected(false);
-                chkAsuhanMedisRalanPenyakitDalam.setSelected(false);
-                chkAsuhanMedisRalanMata.setSelected(false);
-                chkAsuhanMedisRalanNeurologi.setSelected(false);
-                chkAsuhanMedisRalanOrthopedi.setSelected(false);
-                chkAsuhanMedisRalanBedah.setSelected(false);
-                chkAsuhanMedisRanap.setSelected(false);
-                chkAsuhanMedisRanapKandungan.setSelected(false);
-                chkDiagnosaPenyakit.setSelected(true);
-                chkProsedurTindakan.setSelected(false);
-                chkCatatanDokter.setSelected(false);
-                chkHemodialisa.setSelected(false);
-                chkPemeriksaanRalan.setSelected(false);
-                chkPemeriksaanObstetriRalan.setSelected(false);
-                chkPemeriksaanGenekologiRalan.setSelected(false);
-                chkPemeriksaanRanap.setSelected(false);
-                chkPemeriksaanObstetriRanap.setSelected(false);
-                chkPemeriksaanGenekologiRanap.setSelected(false);
-                chkSkriningGiziLanjut.setSelected(false);
-                chkAsuhanGizi.setSelected(false);
-                chkMonitoringGizi.setSelected(false);
-                chkTindakanRalanDokter.setSelected(false);
-                chkTindakanRalanParamedis.setSelected(false);
-                chkTindakanRalanDokterParamedis.setSelected(false);
-                chkTindakanRanapDokter.setSelected(false);
-                chkTindakanRanapParamedis.setSelected(false);
-                chkTindakanRanapDokterParamedis.setSelected(false);
-                chkPenggunaanKamar.setSelected(false);
-                chkOperasiVK.setSelected(false);
+                chkSemuaItemStateChanged(null);
+
                 chkPemeriksaanRadiologi.setSelected(true);
                 chkPemeriksaanLaborat.setSelected(true);
-                chkPemberianObat.setSelected(false);
-                chkPenggunaanObatOperasi.setSelected(false);
-                chkResepPulang.setSelected(false);
-                chkTambahanBiaya.setSelected(false);
-                chkPotonganBiaya.setSelected(false);
-                chkResume.setSelected(false);
                 chkBerkasDigital.setSelected(true);
-                chkUjiFungsiKFR.setSelected(false);
-                chkAsuhanKeperawatanIGD.setSelected(false);
-                chkCatatanObservasiIGD.setSelected(false);
-                chkCatatanObservasiRanap.setSelected(false);
-                chkCatatanObservasiRanapKebidanan.setSelected(false);
-                chkCatatanObservasiRanapPostPartum.setSelected(false);
-                chkCatatanKeperawatanRanap.setSelected(false);
-                chkPemantauanPEWSAnak.setSelected(false);
-                chkAsuhanFisioterapi.setSelected(false);
-                chkAsuhanPsikolog.setSelected(false);
-                chkAsuhanMedisRalanPsikiatri.setSelected(false);
-                chkAsuhanPreOperasi.setSelected(false);
-                chkAsuhanPreAnestesi.setSelected(false);
-                chkPerencanaanPemulangan.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhDewasa.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhAnak.setSelected(false);
-                chkAsuhanMedisRalanGeriatri.setSelected(false);
-                chkAsuhanTambahanGeriatri.setSelected(false);
-                chkSkriningNutrisiDewasa.setSelected(false);
-                chkHasilPemeriksaanUSG.setSelected(false);
-                chkSkriningNutrisiLansia.setSelected(false);
-                chkSkriningNutrisiAnak.setSelected(false);
-                chkKonselingFarmasi.setSelected(false);
-                chkPelayananInformasiObat.setSelected(false);
-                chkTransferAntarRuang.setSelected(false);
-                chkCatatanCekGDS.setSelected(false);
-                chkChecklistPreOperasi.setSelected(false);
-                chkSignInSebelumAnestesi.setSelected(false);
-                chkTimeOutSebelumInsisi.setSelected(false);
-                chkSignOutSebelumMenutupLuka.setSelected(false);
-                chkChecklistPostOperasi.setSelected(false);
-                chkRekonsiliasiObat.setSelected(false);
-                chkPenilaianPasienTerminal.setSelected(false);
-                chkMonitoringReaksiTranfusi.setSelected(false);
-                chkPenilaianKorbanKekerasan.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhLansia.setSelected(false);
-                chkPenilaianPasienPenyakitMenular.setSelected(false);
-                chkEdukasiPasienTerintegrasiRawatJalan.setSelected(false);
-                chkPemantauanPEWSDewasa.setSelected(false);
-                chkAsuhanTambahanBunuhDiri.setSelected(false);
-                chkAsuhanTambahanPerilakuKekerasan.setSelected(false);
-                chkAsuhanTambahanMelarikanDiri.setSelected(false);
-                chkPenilaianPasienKeracunan.setSelected(false);
-                chkAsuhanMedisRalanBedahMulut.setSelected(false);
-                chkPemantauanMOEWSObstetri.setSelected(false);
-                chkCatatanADIMEGizi.setSelected(false);
-                chkAsuhanKeperawatanRalanGeriatri.setSelected(false);
-                chkChecklistKriteriaMasukHCU.setSelected(false);
-                chkChecklistKriteriaKeluarHCU.setSelected(false);
-                chkAsuhanRisikoDekubitus.setSelected(false);
-                chkDokumentasiTindakanESWL.setSelected(false);
-                chkChecklistKriteriaMasukICU.setSelected(false);
-                chkChecklistKriteriaKeluarICU.setSelected(false);
-                chkFollowUpDBD.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhNeonatus.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhGeriatri.setSelected(false);
-                chkPemantauanEWSNeonatus.setSelected(false);
-                chkAsuhanMedisRalanKulitKelamin.setSelected(false);
-                chkPenilaianLevelKecemasanRanapAnak.setSelected(false);
-                chkAsuhanMedisHemodialisa.setSelected(false);
-                chkAsuhanLanjutanRisikoJatuhPsikiatri.setSelected(false);
-                chkAsuhanLanjutanSkriningFungsional.setSelected(false);
-                chkAsuhanMedisRalanKedokteranFisik.setSelected(false);
-                chkAsuhanMedisIGDPsikiatri.setSelected(false);
-                chkPenilaianUlangNyeri.setSelected(false);
-                chkAsuhanTerapiWicara.setSelected(false);
-                chkPengkajianRestrain.setSelected(false);
-                chkAsuhanMedisRalanParu.setSelected(false);
-                chkCatatanKeperawatanRalan.setSelected(false);
-                chkCatatanPersalinan.setSelected(false);
-                chkSkorAldrettePascaAnestesi.setSelected(false);
-                chkSkorStewardPascaAnestesi.setSelected(false);
-                chkSkorBromagePascaAnestesi.setSelected(false);
-                chkAsuhanPreInduksi.setSelected(false);
-                chkHasilPemeriksaanUSGUrologi.setSelected(false);
-                chkHasilPemeriksaanUSGGynecologi.setSelected(false);
-                chkHasilPemeriksaanEKG.setSelected(false);
-                chkPenatalaksanaanTerapiOkupasi.setSelected(false);
-                chkHasilPemeriksaanUSGNeonatus.setSelected(false);
-                chkHasilPemeriksaanEndoskopiFaringLaring.setSelected(false);
-                chkHasilPemeriksaanEndoskopiHidung.setSelected(false);
-                chkHasilPemeriksaanEndoskopiTelinga.setSelected(false);
-                chkPenilaianPasienImunitasRendah.setSelected(false);
-                chkCatatanKeseimbanganCairan.setSelected(false);
-                chkCatatanObservasiCHBP.setSelected(false);
-                chkCatatanObservasiInduksiPersalinan.setSelected(false);
-                chkKonsultasiMedik.setSelected(false);
-                chkSkriningMerokokUsiaRemaja.setSelected(false);
-                chkSkriningKekerasanPadaPerempuan.setSelected(false);
-                chkSkriningObesitas.setSelected(false);
-                chkSkriningRisikoKankerPayudara.setSelected(false);
-                chkSkriningRisikoKankerParu.setSelected(false);
-                chkSkriningGigiMulutRemaja.setSelected(false);
-                chkSkriningTBC.setSelected(false);
-                chkAsuhanMedisMCU.setSelected(false);
-                chkAsuhanKeperawatanRanapBayi.setSelected(false);
-                chkCatatanObservasiRestrainNonFarmakologi.setSelected(false);
-                chkCatatanObservasiVentilator.setSelected(false);
-                chkCatatanAnastesiSedasi.setSelected(false);
-                chkSkriningPUMA.setSelected(false);
-                chkSkriningAdiksiNikotin.setSelected(false);
-                chkSkriningThalasemia.setSelected(false);
-                chkSkriningInstrumenSDQ.setSelected(false);
-                chkSkriningInstrumenSRQ.setSelected(false);
-                chkChecklistPemberianFibrinolitik.setSelected(false);
-                chkSkriningKankerKolorektal.setSelected(false);
-                chkAsuhanPsikologiKlinis.setSelected(false);
-                chkAsuhanMedisRanapNeonatus.setSelected(false);
-                chkHasilPemeriksaanEcho.setSelected(false);
-                chkSEPBPJS.setSelected(false);
-                chkSkriningDiabetesMelitus.setSelected(false);
-                chkPenilaianBayiBaruLahir.setSelected(false);
-                chkLaporanTindakan.setSelected(false);
-                chkLayananKedokteranFisikRehabilitasi.setSelected(false);
-                chkSkriningGigiMulutBalita.setSelected(false);
-                chkSkriningAnemia.setSelected(false);
-                chkLayananProgramKFR.setSelected(false);
-                chkSkriningHipertensi.setSelected(false);
-                chkSkriningKesehatanPenglihatan.setSelected(false);
-                chkCatatanObservasiHemodialisa.setSelected(false);
-                chkSkriningGigiMulutDewasa.setSelected(false);
-                chkCatatanCairanHemodialisa.setSelected(false);
-                chkSkriningRisikoKankerServiks.setSelected(false);
-                chkSkriningGigiMulutLansia.setSelected(false);
-                chkSkriningIndraPendengaran.setSelected(false);
-                chkCatatanPengkajianPaskaOperasi.setSelected(false);
-                chkSkriningFrailtySyndrome.setSelected(false);
-                chkCatatanObservasiBayi.setSelected(false);
-                chkHasilPemeriksaanSlitLamp.setSelected(false);
-                chkHasilPemeriksaanOCT.setSelected(false);
-                chkChecklistKesiapanAnestesi.setSelected(false);
-                chkSkriningInstrumenACRS.setSelected(false);
-                chkChecklistKriteriaMasukNICU.setSelected(false);
-                chkChecklistKriteriaKeluarNICU.setSelected(false);
-                chkAsuhanMedisRanapPsikiatri.setSelected(false);
-                chkChecklistKriteriaMasukPICU.setSelected(false);
-                chkChecklistKriteriaKeluarPICU.setSelected(false);
-                chkSkriningInstrumenAMT.setSelected(false);
-                chkAsuhanMedisRalanJantung.setSelected(false);
-                chkAsuhanMedisRalanUrologi.setSelected(false);
-                chkHasilPemeriksaanTreadmill.setSelected(false);
-                chkHasilPemeriksaanEchoPediatrik.setSelected(false);
-                chkSkriningPSI.setSelected(false);
-                chkSkriningInstrumenESAT.setSelected(false);
-                chkAsuhanMedisRanapJantung.setSelected(false);
-                chkSkriningCRUB65.setSelected(false);
-                chkSkriningGiziKehamilan.setSelected(false);
                 break;
 
             case 2:
                 chkSemua.setSelected(false);
-                chkTriase.setSelected(true);
-                chkAsuhanKeperawatanRalan.setSelected(true);
-                chkAsuhanKeperawatanRalanGigi.setSelected(true);
-                chkAsuhanKeperawatanRalanBayi.setSelected(true);
-                chkAsuhanKeperawatanRalanKandungan.setSelected(true);
-                chkAsuhanKeperawatanRanap.setSelected(true);
-                chkAsuhanKeperawatanRanapKandungan.setSelected(true);
-                chkAsuhanKeperawatanRanapNeonatus.setSelected(true);
-                chkAsuhanKeperawatanRalanPsikiatri.setSelected(true);
-                chkAsuhanMedisRalan.setSelected(true);
-                chkAsuhanMedisIGD.setSelected(true);
-                chkAsuhanMedisRalanKandungan.setSelected(true);
-                chkAsuhanMedisRalanBayi.setSelected(true);
-                chkAsuhanMedisRalanTHT.setSelected(true);
-                chkAsuhanMedisRalanPenyakitDalam.setSelected(true);
-                chkAsuhanMedisRalanMata.setSelected(true);
-                chkAsuhanMedisRalanNeurologi.setSelected(true);
-                chkAsuhanMedisRalanOrthopedi.setSelected(true);
-                chkAsuhanMedisRalanBedah.setSelected(true);
-                chkAsuhanMedisRanap.setSelected(true);
-                chkAsuhanMedisRanapKandungan.setSelected(true);
-                chkDiagnosaPenyakit.setSelected(true);
-                chkProsedurTindakan.setSelected(true);
-                chkCatatanDokter.setSelected(true);
-                chkHemodialisa.setSelected(true);
-                chkPemeriksaanRalan.setSelected(true);
-                chkPemeriksaanObstetriRalan.setSelected(true);
-                chkPemeriksaanGenekologiRalan.setSelected(true);
-                chkPemeriksaanRanap.setSelected(true);
-                chkPemeriksaanObstetriRanap.setSelected(true);
-                chkPemeriksaanGenekologiRanap.setSelected(true);
-                chkSkriningGiziLanjut.setSelected(true);
-                chkAsuhanGizi.setSelected(true);
-                chkMonitoringGizi.setSelected(true);
-                chkTindakanRalanDokter.setSelected(true);
-                chkTindakanRalanParamedis.setSelected(true);
-                chkTindakanRalanDokterParamedis.setSelected(true);
-                chkTindakanRanapDokter.setSelected(true);
-                chkTindakanRanapParamedis.setSelected(true);
-                chkTindakanRanapDokterParamedis.setSelected(true);
-                chkPenggunaanKamar.setSelected(true);
-                chkOperasiVK.setSelected(true);
-                chkPemeriksaanRadiologi.setSelected(true);
-                chkPemeriksaanLaborat.setSelected(true);
-                chkPemberianObat.setSelected(true);
-                chkPenggunaanObatOperasi.setSelected(true);
-                chkResepPulang.setSelected(true);
-                chkTambahanBiaya.setSelected(true);
-                chkPotonganBiaya.setSelected(true);
-                chkResume.setSelected(true);
-                chkBerkasDigital.setSelected(true);
-                chkUjiFungsiKFR.setSelected(true);
-                chkAsuhanKeperawatanIGD.setSelected(true);
-                chkCatatanObservasiIGD.setSelected(true);
-                chkCatatanObservasiRanap.setSelected(true);
-                chkCatatanObservasiRanapKebidanan.setSelected(true);
-                chkCatatanObservasiRanapPostPartum.setSelected(true);
-                chkCatatanKeperawatanRanap.setSelected(true);
-                chkPemantauanPEWSAnak.setSelected(true);
-                chkAsuhanFisioterapi.setSelected(true);
-                chkAsuhanPsikolog.setSelected(true);
-                chkAsuhanMedisRalanPsikiatri.setSelected(true);
-                chkAsuhanPreOperasi.setSelected(true);
-                chkAsuhanPreAnestesi.setSelected(true);
-                chkPerencanaanPemulangan.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhDewasa.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhAnak.setSelected(true);
-                chkAsuhanMedisRalanGeriatri.setSelected(true);
-                chkAsuhanTambahanGeriatri.setSelected(true);
-                chkSkriningNutrisiDewasa.setSelected(true);
-                chkHasilPemeriksaanUSG.setSelected(true);
-                chkSkriningNutrisiLansia.setSelected(true);
-                chkSkriningNutrisiAnak.setSelected(true);
-                chkKonselingFarmasi.setSelected(true);
-                chkPelayananInformasiObat.setSelected(true);
-                chkTransferAntarRuang.setSelected(true);
-                chkCatatanCekGDS.setSelected(true);
-                chkChecklistPreOperasi.setSelected(true);
-                chkSignInSebelumAnestesi.setSelected(true);
-                chkTimeOutSebelumInsisi.setSelected(true);
-                chkSignOutSebelumMenutupLuka.setSelected(true);
-                chkChecklistPostOperasi.setSelected(true);
-                chkRekonsiliasiObat.setSelected(true);
-                chkPenilaianPasienTerminal.setSelected(true);
-                chkMonitoringReaksiTranfusi.setSelected(true);
-                chkPenilaianKorbanKekerasan.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhLansia.setSelected(true);
-                chkPenilaianPasienPenyakitMenular.setSelected(true);
-                chkEdukasiPasienTerintegrasiRawatJalan.setSelected(true);
-                chkPemantauanPEWSDewasa.setSelected(true);
-                chkAsuhanTambahanBunuhDiri.setSelected(true);
-                chkAsuhanTambahanPerilakuKekerasan.setSelected(true);
-                chkAsuhanTambahanMelarikanDiri.setSelected(true);
-                chkPenilaianPasienKeracunan.setSelected(true);
-                chkAsuhanMedisRalanBedahMulut.setSelected(true);
-                chkPemantauanMOEWSObstetri.setSelected(true);
-                chkCatatanADIMEGizi.setSelected(true);
-                chkAsuhanKeperawatanRalanGeriatri.setSelected(true);
-                chkChecklistKriteriaMasukHCU.setSelected(true);
-                chkChecklistKriteriaKeluarHCU.setSelected(true);
-                chkAsuhanRisikoDekubitus.setSelected(true);
-                chkDokumentasiTindakanESWL.setSelected(true);
-                chkChecklistKriteriaMasukICU.setSelected(true);
-                chkChecklistKriteriaKeluarICU.setSelected(true);
-                chkFollowUpDBD.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhNeonatus.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhGeriatri.setSelected(true);
-                chkPemantauanEWSNeonatus.setSelected(true);
-                chkAsuhanMedisRalanKulitKelamin.setSelected(true);
-                chkPenilaianLevelKecemasanRanapAnak.setSelected(true);
-                chkAsuhanMedisHemodialisa.setSelected(true);
-                chkAsuhanLanjutanRisikoJatuhPsikiatri.setSelected(true);
-                chkAsuhanLanjutanSkriningFungsional.setSelected(true);
-                chkAsuhanMedisRalanKedokteranFisik.setSelected(true);
-                chkAsuhanMedisIGDPsikiatri.setSelected(true);
-                chkPenilaianUlangNyeri.setSelected(true);
-                chkAsuhanTerapiWicara.setSelected(true);
-                chkPengkajianRestrain.setSelected(true);
-                chkAsuhanMedisRalanParu.setSelected(true);
-                chkCatatanKeperawatanRalan.setSelected(true);
-                chkCatatanPersalinan.setSelected(true);
-                chkSkorAldrettePascaAnestesi.setSelected(true);
-                chkSkorStewardPascaAnestesi.setSelected(true);
-                chkSkorBromagePascaAnestesi.setSelected(true);
-                chkAsuhanPreInduksi.setSelected(true);
-                chkHasilPemeriksaanUSGUrologi.setSelected(true);
-                chkHasilPemeriksaanUSGGynecologi.setSelected(true);
-                chkHasilPemeriksaanEKG.setSelected(true);
-                chkPenatalaksanaanTerapiOkupasi.setSelected(true);
-                chkHasilPemeriksaanUSGNeonatus.setSelected(true);
-                chkHasilPemeriksaanEndoskopiFaringLaring.setSelected(true);
-                chkHasilPemeriksaanEndoskopiHidung.setSelected(true);
-                chkHasilPemeriksaanEndoskopiTelinga.setSelected(true);
-                chkPenilaianPasienImunitasRendah.setSelected(true);
-                chkCatatanKeseimbanganCairan.setSelected(true);
-                chkCatatanObservasiCHBP.setSelected(true);
-                chkCatatanObservasiInduksiPersalinan.setSelected(true);
-                chkKonsultasiMedik.setSelected(true);
-                chkSkriningMerokokUsiaRemaja.setSelected(true);
-                chkSkriningKekerasanPadaPerempuan.setSelected(true);
-                chkSkriningObesitas.setSelected(true);
-                chkSkriningRisikoKankerPayudara.setSelected(true);
-                chkSkriningRisikoKankerParu.setSelected(true);
-                chkSkriningGigiMulutRemaja.setSelected(true);
-                chkSkriningTBC.setSelected(true);
-                chkAsuhanMedisMCU.setSelected(true);
-                chkAsuhanKeperawatanRanapBayi.setSelected(true);
-                chkCatatanObservasiRestrainNonFarmakologi.setSelected(true);
-                chkCatatanObservasiVentilator.setSelected(true);
-                chkCatatanAnastesiSedasi.setSelected(true);
-                chkSkriningPUMA.setSelected(true);
-                chkSkriningAdiksiNikotin.setSelected(true);
-                chkSkriningThalasemia.setSelected(true);
-                chkSkriningInstrumenSDQ.setSelected(true);
-                chkSkriningInstrumenSRQ.setSelected(true);
-                chkChecklistPemberianFibrinolitik.setSelected(true);
-                chkSkriningKankerKolorektal.setSelected(true);
-                chkAsuhanPsikologiKlinis.setSelected(true);
-                chkAsuhanMedisRanapNeonatus.setSelected(true);
-                chkHasilPemeriksaanEcho.setSelected(true);
-                chkSEPBPJS.setSelected(true);
-                chkSkriningDiabetesMelitus.setSelected(true);
-                chkPenilaianBayiBaruLahir.setSelected(true);
-                chkLaporanTindakan.setSelected(true);
-                chkLayananKedokteranFisikRehabilitasi.setSelected(true);
-                chkSkriningGigiMulutBalita.setSelected(true);
-                chkSkriningAnemia.setSelected(true);
-                chkLayananProgramKFR.setSelected(true);
-                chkSkriningHipertensi.setSelected(true);
-                chkSkriningKesehatanPenglihatan.setSelected(true);
-                chkCatatanObservasiHemodialisa.setSelected(true);
-                chkSkriningGigiMulutDewasa.setSelected(true);
-                chkCatatanCairanHemodialisa.setSelected(true);
-                chkSkriningRisikoKankerServiks.setSelected(true);
-                chkSkriningGigiMulutLansia.setSelected(true);
-                chkSkriningIndraPendengaran.setSelected(true);
-                chkCatatanPengkajianPaskaOperasi.setSelected(true);
-                chkSkriningFrailtySyndrome.setSelected(true);
-                chkCatatanObservasiBayi.setSelected(true);
-                chkHasilPemeriksaanSlitLamp.setSelected(true);
-                chkHasilPemeriksaanOCT.setSelected(true);
-                chkChecklistKesiapanAnestesi.setSelected(true);
-                chkSkriningInstrumenACRS.setSelected(true);
-                chkChecklistKriteriaMasukNICU.setSelected(true);
-                chkChecklistKriteriaKeluarNICU.setSelected(true);
-                chkAsuhanMedisRanapPsikiatri.setSelected(true);
-                chkChecklistKriteriaMasukPICU.setSelected(true);
-                chkChecklistKriteriaKeluarPICU.setSelected(true);
-                chkSkriningInstrumenAMT.setSelected(true);
-                chkAsuhanMedisRalanJantung.setSelected(true);
-                chkAsuhanMedisRalanUrologi.setSelected(true);
-                chkHasilPemeriksaanTreadmill.setSelected(true);
-                chkHasilPemeriksaanEchoPediatrik.setSelected(true);
-                chkSkriningPSI.setSelected(true);
-                chkSkriningInstrumenESAT.setSelected(true);
-                chkAsuhanMedisRanapJantung.setSelected(true);
-                chkSkriningCRUB65.setSelected(true);
-                chkSkriningGiziKehamilan.setSelected(true);
+                chkSemuaItemStateChanged(null);
+
+                chkKonsultasiPerawat.setSelected(true);
                 break;
+
+            case 3:
+                chkSemua.setSelected(false);
+                chkSemuaItemStateChanged(null);
+
+                chkDiagnosaPenyakit.setSelected(true);
+                break;
+
+            case 4:
+                chkSemua.setSelected(false);
+                chkSemuaItemStateChanged(null);
+
+                chkOperasiVK.setSelected(true);
+                break;
+
+            case 5:
+                chkSemua.setSelected(true);
+                chkSemuaItemStateChanged(null);
+                break;
+
         }
     }
     
-    //TAMBAHAN
-    private String statusVerifikasi(ResultSet rs2, String noRawat) throws Exception {
+    //CUSTOM RSIL
+    private String statusVerifikasi(ResultSet rs2, String noRawat, String tipeRawat) throws Exception {
         String nikValidator = rs2.getString("nik_validator");
         String tglValidasi = rs2.getString("tgl_validasi");
         String jamValidasi = rs2.getString("jam_validasi");
@@ -37912,17 +37052,398 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         String jamRawat = rs2.getString("jam_rawat");
         String nip = rs2.getString("nip");
         String nama = rs2.getString("nama");
-        String dokter = Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik='"+rs2.getString("nik_validator")+"'");
+        String dokter = Sequel.cariIsi("select pegawai.nama from pegawai where pegawai.nik='" + nikValidator + "'");
 
         if (nikValidator != null && !nikValidator.equals("")) {
-            // Sudah diverifikasi - tampil info verifikasi + link hapus
             return "<font color='white' style='background:#28a745;'>" + tglValidasi + "<br>" + jamValidasi + "<br>" + dokter + "</font>"
-                    + "<br><a href='hapusverif://" + noRawat + "|" + tglRawat + "|" + jamRawat + "|" + nip + "|" + nama
-                    + "'><font color='white' style='background:#dc3545;;'>Hapus Verifikasi</font></a>";
+                    + "<br><a href='hapusverif_" + tipeRawat + "://" + noRawat + "|" + tglRawat + "|" + jamRawat + "|" + nip + "|" + nama
+                    + "'><font color='white' style='background:#dc3545;'>Hapus Verifikasi</font></a>";
         } else {
-            // Belum diverifikasi
-            return "<a href='verifikasi://" + noRawat + "|" + tglRawat + "|" + jamRawat + "|" + nip + "|" + nama
+            return "<a href='verifikasi_" + tipeRawat + "://" + noRawat + "|" + tglRawat + "|" + jamRawat + "|" + nip + "|" + nama
                     + "'>Klik untuk Verifikasi SOAPIE</a>";
+        }
+    }
+    
+    //CUSTOM RSIL
+    private void pilihanRiwayatPerawatan() { //--> FULL CUSTOM
+        Object[] options = {"Riwayat Penunjang Medis", "Riwayat SBAR", "Riwayat Diagnosa", "Riwayat Operasi", "Semua Riwayat"};
+        try {
+            String input = (String) JOptionPane.showInputDialog(null, "Silahkan pilih yang mau ditampilkan!", "Riwayat Perawatan", JOptionPane.QUESTION_MESSAGE, null, options, "Riwayat Penunjang Medis");
+
+            if (input != null) {
+                switch (input) {
+                    case "Riwayat Penunjang Medis":
+                        chkSemua.setSelected(false);
+                        chkSemuaItemStateChanged(null);
+                        chkPemeriksaanRadiologi.setSelected(true);
+                        chkPemeriksaanLaborat.setSelected(true);
+                        chkBerkasDigital.setSelected(true);
+                        break;
+                    case "Riwayat SBAR":
+                        chkSemua.setSelected(false);
+                        chkSemuaItemStateChanged(null);
+                        chkKonsultasiPerawat.setSelected(true);
+                        break;
+                    case "Riwayat Diagnosa":
+                        chkSemua.setSelected(false);
+                        chkSemuaItemStateChanged(null);
+                        chkDiagnosaPenyakit.setSelected(true);
+                        break;
+                    case "Riwayat Operasi":
+                        chkSemua.setSelected(false);
+                        chkSemuaItemStateChanged(null);
+                        chkOperasiVK.setSelected(true);
+                        break;
+                    case "Semua Riwayat":
+                        chkSemua.setSelected(true);
+                        chkSemuaItemStateChanged(null);
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+    }
+    
+    //CUSTOM RSIL
+    private void verifikasiSbarKonsul(String noPermintaan) { //--> FULL CUSTOM
+        String kdDokterDikonsuli = Sequel.cariIsi(
+                "select kd_dokter_dikonsuli from konsultasi_perawat where no_permintaan = '" + noPermintaan + "'"
+        );
+        if (!akses.getkode().equals(kdDokterDikonsuli)) {
+            JOptionPane.showMessageDialog(null,
+                    "Hanya dokter yang dikonsul yang dapat memverifikasi!",
+                    "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int konfirmasi = JOptionPane.showConfirmDialog(null,
+                "Verifikasi no permintaan " + noPermintaan + "?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            int scrollPos = Scroll.getVerticalScrollBar().getValue();
+            if (Sequel.menyimpantf("jawaban_konsultasi_perawat_verifikasi", "?,?,?",
+                    "Verifikasi Konsultasi Perawat", 3,
+                    new String[]{
+                        noPermintaan,
+                        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()),
+                        akses.getkode()
+                    })) {
+                tampilPerawatan();
+                SwingUtilities.invokeLater(() -> {
+                    Scroll.getVerticalScrollBar().setValue(scrollPos);
+                });
+            }
+        }
+    }
+
+    //CUSTOM RSIL
+    private void hapusVerifikasiSbarKonsul(String noPermintaan) { //--> FULL CUSTOM
+        String kdDokterDikonsuli = Sequel.cariIsi("select kd_dokter_dikonsuli from konsultasi_perawat where no_permintaan = '" + noPermintaan + "'");
+        if (!akses.getkode().equals(kdDokterDikonsuli)) {
+            JOptionPane.showMessageDialog(null,
+                    "Hanya dokter yang dikonsul yang dapat menghapus verifikasi!",
+                    "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int konfirmasi = JOptionPane.showConfirmDialog(null,
+                "Hapus verifikasi no permintaan " + noPermintaan + "?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            int scrollPos = Scroll.getVerticalScrollBar().getValue();
+            Sequel.queryu2tf("delete from jawaban_konsultasi_perawat_verifikasi where no_permintaan=?",
+                    1, new String[]{noPermintaan});
+            tampilPerawatan();
+            SwingUtilities.invokeLater(() -> {
+                Scroll.getVerticalScrollBar().setValue(scrollPos);
+            });
+        }
+    }
+    
+    //CUSTOM RSIL
+    private void verifikasiRalan(String url) {
+        String[] data = url.replace("verifikasi_ralan://", "").split("\\|");
+        String noRawat = data[0];
+        String tglRawat = data[1];
+        String jamRawat = data[2];
+        String nip = data[3];
+        String nama = data[4];
+
+        // ── TANYA VERIF SEMUA DULU ──
+        int tanyaSemua = JOptionPane.showConfirmDialog(null, "Apakah ingin memverifikasi SEMUA SOAPIE Ralan\npada kunjungan ini sekaligus?", "Verifikasi Semua?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (tanyaSemua == JOptionPane.YES_OPTION) {
+            // Verif semua yang belum terverifikasi
+            int konfirmasi = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin verif SEMUA SOAPIE Ralan?\n\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    + "No. Rawat : " + noRawat + "\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    + "Semua SOAPIE yang belum terverifikasi\nakan diverifikasi sekaligus!",
+                    "Konfirmasi Verifikasi Semua Ralan",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                if (Sequel.cariInteger("select count(reg_periksa.kd_dokter) from reg_periksa where reg_periksa.kd_dokter=?", akses.getkode()) > 0) {
+                    try {
+                        String tglNow = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+                        String jamNow = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date());
+
+                        // Ambil semua yang belum terverifikasi pada no_rawat ini
+                        rs2 = koneksi.prepareStatement("select pr.tgl_perawatan,pr.jam_rawat,pr.nip from pemeriksaan_ralan pr "
+                                + "left join pemeriksaan_ralan_validasi prv on "
+                                + "pr.no_rawat=prv.no_rawat and "
+                                + "pr.tgl_perawatan=prv.tgl_perawatan and "
+                                + "pr.jam_rawat=prv.jam_rawat "
+                                + "where pr.no_rawat='" + noRawat + "' "
+                                + "and prv.no_rawat is null"
+                        ).executeQuery();
+
+                        int berhasil = 0;
+                        int gagal = 0;
+                        while (rs2.next()) {
+                            if (Sequel.menyimpantf("pemeriksaan_ralan_validasi", "?,?,?,?,?,?,?", "Verif SOAPIE Ralan", 7, new String[]{
+                                noRawat,rs2.getString("tgl_perawatan"),rs2.getString("jam_rawat"),akses.getkode(), tglNow, jamNow, "Validasi"})) {
+                                berhasil++;
+                            } else {
+                                gagal++;
+                            }
+                        }
+                        rs2.close();
+
+                        JOptionPane.showMessageDialog(null,
+                                "Verifikasi Semua SOAPIE Ralan selesai!\n\n"
+                                + "Berhasil : " + berhasil + " data\n"
+                                + "Gagal    : " + gagal + " data",
+                                "Selesai", JOptionPane.INFORMATION_MESSAGE);
+                        
+                        //int scrollPos = Scroll.getVerticalScrollBar().getValue();
+                        tampilSoapi();
+                        //SwingUtilities.invokeLater(() -> {
+                            //Scroll.getVerticalScrollBar().setValue(scrollPos);
+                        //});
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Terjadi kesalahan!\nDetail: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
+                }
+            }
+
+        } else {
+            // ── VERIF SATU SAJA ──
+            int konfirmasi = JOptionPane.showConfirmDialog(null,
+                    "Apakah Anda yakin ingin verif SOAPIE Ralan ini?\n\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    + "No. Rawat        : " + noRawat + "\n"
+                    + "Tanggal SOAP     : " + tglRawat + "\n"
+                    + "Jam SOAP         : " + jamRawat + "\n"
+                    + "Dokter/Paramedis : " + nip + " - " + nama + "\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    "Konfirmasi Verifikasi SOAPIE Ralan",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                if (Sequel.cariInteger("select count(reg_periksa.kd_dokter) from reg_periksa where reg_periksa.kd_dokter=?", akses.getkode()) > 0) {
+                    if (Sequel.menyimpantf("pemeriksaan_ralan_validasi", "?,?,?,?,?,?,?", "Verif SOAPIE Ralan", 7, new String[]{
+                        noRawat, tglRawat, jamRawat, akses.getkode(),new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()),
+                        new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()),"Validasi"})) 
+                    { JOptionPane.showMessageDialog(null,
+                      "Verifikasi SOAPIE Ralan berhasil!\n\n"
+                      + "Tanggal SOAP : " + tglRawat + "\n"
+                      + "Jam SOAP     : " + jamRawat + "\n"
+                      + "Oleh         : " + nip + " - " + nama, "Verifikasi Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                        tampilSoapi();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Gagal menyimpan verifikasi!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
+                }
+            }
+        }
+    }
+    
+    private void hapusVerifRalan(String url) {
+        String[] data = url.replace("hapusverif_ralan://", "").split("\\|");
+        String noRawat = data[0];
+        String tglRawat = data[1];
+        String jamRawat = data[2];
+        String nip = data[3];
+        String nama = data[4];
+        
+        String nikYangVerif = Sequel.cariIsi("select nik_validator from pemeriksaan_ralan_validasi where no_rawat='" + noRawat + "' and tgl_perawatan='" + tglRawat + "' and jam_rawat='" + jamRawat + "'");
+        
+        if (!akses.getkode().equals(nikYangVerif)) {
+            JOptionPane.showMessageDialog(null,
+                    "Anda tidak berhak menghapus verifikasi ini!\n"
+                    + "Hanya dokter yang melakukan verifikasi yang dapat menghapusnya.",
+                    "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int konfirmasi = JOptionPane.showConfirmDialog(null,
+                "Apakah Anda yakin ingin MENGHAPUS verifikasi SOAPIE Ralan ini?\n\n"
+                + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                + "No. Rawat        : " + noRawat + "\n"
+                + "Tanggal SOAP     : " + tglRawat + "\n"
+                + "Jam SOAP         : " + jamRawat + "\n"
+                + "Dokter/Paramedis : " + nip + " - " + nama + "\n"
+                + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                "Konfirmasi Hapus Verifikasi Ralan",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try {
+
+                Sequel.queryu("delete from pemeriksaan_ralan_validasi where no_rawat='" + noRawat + "' and tgl_perawatan='" + tglRawat + "' and jam_rawat='" + jamRawat + "'");
+                JOptionPane.showMessageDialog(null,"Verifikasi Ralan berhasil dihapus!","Hapus Berhasil",JOptionPane.INFORMATION_MESSAGE);
+
+                tampilSoapi();
+
+            } catch (Exception ex) {
+
+                JOptionPane.showMessageDialog(null,"Gagal menghapus!\nDetail: " + ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void verifikasiRanap(String url) {
+        String[] data = url.replace("verifikasi_ranap://", "").split("\\|");
+        String noRawat = data[0];
+        String tglRawat = data[1];
+        String jamRawat = data[2];
+        String nip = data[3];
+        String nama = data[4];
+
+        int tanyaSemua = JOptionPane.showConfirmDialog(null,
+                "Apakah ingin memverifikasi SEMUA SOAPIE Ranap\npada kunjungan ini sekaligus?",
+                "Verifikasi Semua?",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (tanyaSemua == JOptionPane.YES_OPTION) {
+            int konfirmasi = JOptionPane.showConfirmDialog(null,
+                    "Apakah Anda yakin ingin verif SEMUA SOAPIE Ranap?\n\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    + "No. Rawat : " + noRawat + "\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    + "Semua SOAPIE yang belum terverifikasi\nakan diverifikasi sekaligus!",
+                    "Konfirmasi Verifikasi Semua Ranap",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                if (Sequel.cariInteger("select count(dpjp_ranap.kd_dokter) from dpjp_ranap where dpjp_ranap.kd_dokter=?", akses.getkode()) > 0) {
+                    try {
+                        String tglNow = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+                        String jamNow = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date());
+
+                        rs2 = koneksi.prepareStatement("select pr.tgl_perawatan,pr.jam_rawat,pr.nip "
+                                + "from pemeriksaan_ranap pr left join pemeriksaan_ranap_validasi prv on pr.no_rawat=prv.no_rawat and "
+                                + "pr.tgl_perawatan=prv.tgl_perawatan and pr.jam_rawat=prv.jam_rawat "
+                                + "where pr.no_rawat='" + noRawat + "' "
+                                + "and prv.no_rawat is null").executeQuery();
+
+                        int berhasil = 0;
+                        int gagal = 0;
+                        boolean adaData = false;
+
+                        while (rs2.next()) {
+                            adaData = true;
+
+                            if (Sequel.menyimpantf("pemeriksaan_ranap_validasi","?,?,?,?,?,?,?","Verif SOAPIE Ranap",7,new String[]{
+                                noRawat,rs2.getString("tgl_perawatan"),rs2.getString("jam_rawat"),akses.getkode(),tglNow,jamNow,"Validasi"})) {
+                                berhasil++;
+                            } else {
+                                gagal++;
+                            }
+                        }
+                        rs2.close();
+                        if (adaData) {
+                            JOptionPane.showMessageDialog(null,"✔ Verifikasi Semua SOAPIE Ranap selesai!\n\n"
+                                    + "Berhasil : " + berhasil + " data\n"
+                                    + "Gagal    : " + gagal + " data",
+                                    "Selesai",JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null,"Semua SOAPIE Ranap sudah diverifikasi!","Informasi",JOptionPane.INFORMATION_MESSAGE
+                            );
+                        }
+                        tampilSoapi();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Terjadi kesalahan!\nDetail: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
+                }
+            }
+        } else {
+            int konfirmasi = JOptionPane.showConfirmDialog(null,
+                    "Apakah Anda yakin ingin verif SOAPIE Ranap ini?\n\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    + "No. Rawat        : " + noRawat + "\n"
+                    + "Tanggal SOAP     : " + tglRawat + "\n"
+                    + "Jam SOAP         : " + jamRawat + "\n"
+                    + "Dokter/Paramedis : " + nip + " - " + nama + "\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    "Konfirmasi Verifikasi SOAPIE Ranap",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                if (Sequel.cariInteger("select count(dpjp_ranap.kd_dokter) from dpjp_ranap where dpjp_ranap.kd_dokter=?", akses.getkode()) > 0) {
+                    if (Sequel.menyimpantf("pemeriksaan_ranap_validasi", "?,?,?,?,?,?,?", "Verif SOAPIE Ranap", 7, new String[]{
+                        noRawat, tglRawat, jamRawat, akses.getkode(),new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()),new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()), "Validasi"
+                    })) {
+                        JOptionPane.showMessageDialog(null,
+                                "Verifikasi SOAPIE Ranap berhasil!\n\nTanggal SOAP : " + tglRawat + "\nJam SOAP     : " + jamRawat + "\nOleh         : " + nip + " - " + nama,
+                                "Verifikasi Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                        tampilSoapi();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Gagal menyimpan verifikasi!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Hanya bisa divalidasi oleh DPJP yang bersangkutan..!!");
+                }
+            }
+        }
+    }
+
+    private void hapusVerifRanap(String url) {
+        String[] data = url.replace("hapusverif_ranap://", "").split("\\|");
+        String noRawat = data[0];
+        String tglRawat = data[1];
+        String jamRawat = data[2];
+        String nip = data[3];
+        String nama = data[4];
+        
+        String nikYangVerif = Sequel.cariIsi("select nik_validator from pemeriksaan_ranap_validasi where no_rawat='" + noRawat + "' and tgl_perawatan='" + tglRawat + "' and jam_rawat='" + jamRawat + "'");
+
+        if (!akses.getkode().equals(nikYangVerif)) {
+            JOptionPane.showMessageDialog(null,
+                    "Anda tidak berhak menghapus verifikasi ini!\n"
+                    + "Hanya dokter yang melakukan verifikasi yang dapat menghapusnya.",
+                    "Akses Ditolak", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int konfirmasi = JOptionPane.showConfirmDialog(null,
+                "Apakah Anda yakin ingin MENGHAPUS verifikasi SOAPIE Ranap ini?\n\n"
+                + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                + "No. Rawat        : " + noRawat + "\n"
+                + "Tanggal SOAP     : " + tglRawat + "\n"
+                + "Jam SOAP         : " + jamRawat + "\n"
+                + "Dokter/Paramedis : " + nip + " - " + nama + "\n"
+                + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                "Konfirmasi Hapus Verifikasi Ranap",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try {
+                Sequel.queryu("delete from pemeriksaan_ranap_validasi where no_rawat='" + noRawat + "' and tgl_perawatan='" + tglRawat + "' and jam_rawat='" + jamRawat + "'");
+                JOptionPane.showMessageDialog(null,"Verifikasi Ranap berhasil dihapus!","Hapus Berhasil",JOptionPane.INFORMATION_MESSAGE);
+                tampilSoapi();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,"Gagal menghapus!\nDetail: " + ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 

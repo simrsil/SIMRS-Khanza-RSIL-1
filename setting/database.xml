@@ -2,16 +2,24 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>KhanzaHMS</comment> 
-    <entry key="HOST">5k7+C7EnUw9nUv2Nix+DBA==</entry>
-    <entry key="DATABASE">AZHNccBwSmSho84f+X8GyQ==</entry>
+    <!-- SERVER LIVE -->
+    <!-- <entry key="HOST">dFyp41eii8EIsGnWhCqVyg==</entry> -->
+    <!-- <entry key="DATABASE">M8q3yJE55w0mPhc2Ik93Sw==</entry> -->
+    <!-- SERVER DEVELOPMENT -->
+    <entry key="HOST">MIL7UEjG+gr2XSovjg83kw==</entry>
+    <entry key="DATABASE">eYz/9QGmmwvRQhagLJpyoQ==</entry>
     <entry key="PORT">nioxtijcpDaKSUiUiP5FAg==</entry>
-    <entry key="USER">kMR3WfAwUK6MbhCyydxa0g==</entry>
-    <entry key="PAS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <!-- SERVER LIVE -->
+    <!-- <entry key="USER">M8q3yJE55w0mPhc2Ik93Sw==</entry>
+    <entry key="PAS">Un6eEvcqGsRfLMd8BlYLFA==</entry> -->
+    <!-- SERVER DEVELOPMENT -->
+    <entry key="USER">eYz/9QGmmwvRQhagLJpyoQ==</entry>
+    <entry key="PAS">Un6eEvcqGsRfLMd8BlYLFA==</entry>
     <entry key="CARICEPAT">aktif</entry>
     <entry key="HOSTHYBRIDWEB">5k7+C7EnUw9nUv2Nix+DBA==</entry>
     <entry key="USERHYBRIDWEB">nmXqCKzrz9i8GTZlq7JruQ==</entry>
     <entry key="PASHYBRIDWEB">AsJ/0/gCnYnD+gK4fw9uKA==</entry>
-    <entry key="HYBRIDWEB">webapps</entry>
+    <entry key="HYBRIDWEB">webapps_2026</entry>
     <entry key="PORTWEB">80</entry>
     <entry key="AKTIFKANWARNARALAN">no</entry>
     <entry key="ANTRIAN">player</entry>

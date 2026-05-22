@@ -339,10 +339,19 @@ public final class RMCariPemeriksaan extends javax.swing.JDialog {
         Valid.tabelKosong(tabMode);
         try{
             ps=koneksi.prepareStatement(
-                    "select pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat,pemeriksaan_ralan.pemeriksaan "+
-                    "from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=? and "+
-                    "(pemeriksaan_ralan.tgl_perawatan like ? or pemeriksaan_ralan.pemeriksaan like ?) "+
-                    "order by pemeriksaan_ralan.tgl_perawatan,pemeriksaan_ralan.jam_rawat");
+                    "select pr.tgl_perawatan,pr.jam_rawat,"+
+                    "CONCAT(IF(pr.suhu_tubuh='','',CONCAT('Suhu ', pr.suhu_tubuh)),"+
+                    "IF(pr.tensi='','',CONCAT(', TD ', pr.tensi)),"+
+                    "IF(pr.nadi='','',CONCAT(', Nadi ', pr.nadi)),"+
+                    "IF(pr.respirasi='','',CONCAT(', RR ', pr.respirasi)),"+
+                    "IF(pr.tinggi='','',CONCAT(', TB ', pr.tinggi)),"+
+                    "IF(pr.berat='','',CONCAT(', BB ', pr.berat)),"+
+                    "IF(pr.spo2='','',CONCAT(', SpO2 ', pr.spo2)),"+
+                    "IF(pr.gcs='','',CONCAT(', GCS ', pr.gcs)),"+
+                    "' [', pr.pemeriksaan,']') AS pemeriksaan "+
+                    "from pemeriksaan_ralan pr where pr.no_rawat=? and "+
+                    "(pr.tgl_perawatan like ? or pr.pemeriksaan like ?) "+
+                    "order by pr.tgl_perawatan,pr.jam_rawat");
             try{
                 ps.setString(1,norawat);
                 ps.setString(2,"%"+TCari.getText().trim()+"%");
@@ -369,10 +378,20 @@ public final class RMCariPemeriksaan extends javax.swing.JDialog {
         
         try{
             ps=koneksi.prepareStatement(
-                    "select pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat,pemeriksaan_ranap.pemeriksaan "+
-                    "from pemeriksaan_ranap where pemeriksaan_ranap.no_rawat=? and "+
-                    "(pemeriksaan_ranap.tgl_perawatan like ? or pemeriksaan_ranap.pemeriksaan like ?) "+
-                    "order by pemeriksaan_ranap.tgl_perawatan,pemeriksaan_ranap.jam_rawat");
+                    "select pr.tgl_perawatan,pr.jam_rawat, "+
+                    "CONCAT(IF(pr.pemeriksaan='','',CONCAT('[', pr.pemeriksaan,'] ')),"+
+                    "IF(pr.suhu_tubuh='','',CONCAT('Suhu ', pr.suhu_tubuh)),"+
+                    "IF(pr.tensi='','',CONCAT(', TD ', pr.tensi)),"+
+                    "IF(pr.nadi='','',CONCAT(', Nadi ', pr.nadi)),"+
+                    "IF(pr.respirasi='','',CONCAT(', RR ', pr.respirasi)),"+
+                    "IF(pr.tinggi='','',CONCAT(', TB ', pr.tinggi)),"+
+                    "IF(pr.berat='','',CONCAT(', BB ', pr.berat)),"+
+                    "IF(pr.spo2='','',CONCAT(', SpO2 ', pr.spo2)),"+
+                    "IF(pr.gcs='','',CONCAT(', GCS ', pr.gcs)),"+
+                    "IF(pr.kesadaran='','',CONCAT(', Kesadaran (', pr.kesadaran,')'))) AS pemeriksaan "+
+                    "from pemeriksaan_ranap pr where pr.no_rawat=? and "+
+                    "(pr.tgl_perawatan like ? or pr.pemeriksaan like ?) "+
+                    "order by pr.tgl_perawatan,pr.jam_rawat");
             try{
                 ps.setString(1,norawat);
                 ps.setString(2,"%"+TCari.getText().trim()+"%");

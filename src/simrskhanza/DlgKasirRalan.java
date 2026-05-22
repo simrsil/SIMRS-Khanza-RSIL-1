@@ -267,6 +267,9 @@ import surat.SuratSakitPihak2;
 import surat.SuratSerahTerimaBarangAnggotaTubuh;
 import surat.SuratTidakHamil;
 
+//CUSTOM RSIL
+import rekammedis.RMProfilRingkasMedisRawatJalan;
+
 /**
  *
  * @author dosen
@@ -312,6 +315,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
 
         tbKasirRalan.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbKasirRalan.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        //CUSTOM
+        tbKasirRalan.getTableHeader().setReorderingAllowed(false);
 
         for (i = 0; i < 20; i++) {
             TableColumn column = tbKasirRalan.getColumnModel().getColumn(i);
@@ -557,6 +562,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         ppResume = new javax.swing.JMenuItem();
         ppRiwayat = new javax.swing.JMenuItem();
         ppDeteksiDIniCorona = new javax.swing.JMenuItem();
+        //CUSTOM RSIL
+        ppPRMJ = new javax.swing.JMenuItem();
         MnPermintaan = new javax.swing.JMenu();
         MnJadwalOperasi = new javax.swing.JMenuItem();
         MnPermintaanLab = new javax.swing.JMenuItem();
@@ -878,6 +885,12 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         TNoRMCari = new widget.TextBox();
         jLabel8 = new widget.Label();
         TPasienCari = new widget.TextBox();
+        //Custom (Tambahan untuk kolom NIK)
+        jLabel9 = new widget.Label();
+        TNikCari = new widget.TextBox();
+        //Custom (Tambahan untuk kolom SEP)
+        jLabel11 = new widget.Label();
+        TSEPCari = new widget.TextBox();
 
         jPopupMenu1.setForeground(new java.awt.Color(50, 50, 50));
         jPopupMenu1.setName("jPopupMenu1"); // NOI18N
@@ -2295,6 +2308,21 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         ppDeteksiDIniCorona.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ppDeteksiDIniCoronaBtnPrintActionPerformed(evt);
+            }
+        });
+        
+        ppPRMJ.setBackground(new java.awt.Color(255, 255, 254));
+        ppPRMJ.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        ppPRMJ.setForeground(new java.awt.Color(50, 50, 50));
+        ppPRMJ.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        ppPRMJ.setText("Profil Ringkas Medis Rawat Jalan");
+        ppPRMJ.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ppPRMJ.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        ppPRMJ.setName("ppDeteksiDIniCorona"); // NOI18N
+        ppPRMJ.setPreferredSize(new java.awt.Dimension(210, 26));
+        ppPRMJ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ppPRMJBtnPrintActionPerformed(evt);
             }
         });
         
@@ -6509,6 +6537,30 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         TPasienCari.setName("TPasienCari"); // NOI18N
         TPasienCari.setPreferredSize(new java.awt.Dimension(250, 23));
         panelGlass9.add(TPasienCari);
+        
+        // Custom (Dimensi Label dan Kolom
+        jLabel9.setText("NIK :");
+        jLabel9.setName("jLabel9"); // NOI18N
+        jLabel9.setPreferredSize(new java.awt.Dimension(40, 23));
+        panelGlass9.add(jLabel9);
+        
+        TNikCari.setEditable(true);
+        TNikCari.setHighlighter(null);
+        TNikCari.setName("TNikCari"); // NOI18N
+        TNikCari.setPreferredSize(new java.awt.Dimension(120, 23));
+        panelGlass9.add(TNikCari);
+        
+        //Custom (Dimensi Label dan Kolom)
+        jLabel11.setText("SEP :");
+        jLabel11.setName("jLabel11"); // NOI18N
+        jLabel11.setPreferredSize(new java.awt.Dimension(40, 23));
+        panelGlass9.add(jLabel11);
+        
+        TSEPCari.setEditable(false);
+        TSEPCari.setHighlighter(null);
+        TSEPCari.setName("TSEPCari"); // NOI18N
+        TSEPCari.setPreferredSize(new java.awt.Dimension(155, 23));
+        panelGlass9.add(TSEPCari);
 
         internalFrame1.add(panelGlass9, java.awt.BorderLayout.PAGE_START);
 
@@ -11190,6 +11242,26 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 form.emptTeks();
                 form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
                 form.setVisible(true);
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_ppDeteksiDIniCoronaBtnPrintActionPerformed
+    //CUSTOM RSIL
+    private void ppPRMJBtnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppDeteksiDIniCoronaBtnPrintActionPerformed
+        if(tabModekasir.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRMCari.requestFocus();
+        }else if(TPasienCari.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbKasirRalan.requestFocus();
+        }else{
+            if (tbKasirRalan.getSelectedRow() != -1) {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                RMProfilRingkasMedisRawatJalan resume = new RMProfilRingkasMedisRawatJalan(null, true);
+                resume.setNoRm(TNoRMCari.getText(), TPasienCari.getText());
+                resume.setSize(internalFrame1.getWidth(), internalFrame1.getHeight());
+                resume.setLocationRelativeTo(internalFrame1);
+                resume.setVisible(true);
                 this.setCursor(Cursor.getDefaultCursor());
             }
         }
@@ -16027,6 +16099,9 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private widget.TextBox TDokter;
     private widget.TextBox TKdPny;
     private widget.TextBox TNoRMCari;
+    //CUSTOM
+    private widget.TextBox TNikCari;
+    private widget.TextBox TSEPCari;
     private widget.TextBox TNoReg;
     private widget.TextBox TNoRw;
     private widget.TextBox TNoRwCari;
@@ -16074,6 +16149,9 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private widget.Label jLabel6;
     private widget.Label jLabel7;
     private widget.Label jLabel8;
+    //CUSTOM
+    private widget.Label jLabel9;
+    private widget.Label jLabel11;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JPanel jPanel2;
@@ -16103,6 +16181,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
     private javax.swing.JMenuItem ppCatatanPasien;
     private javax.swing.JMenuItem ppDataIndukKecelakaan;
     private javax.swing.JMenuItem ppDeteksiDIniCorona;
+    private javax.swing.JMenuItem ppPRMJ;
     private javax.swing.JMenuItem ppIKP;
     private javax.swing.JMenuItem ppIKP1;
     private javax.swing.JMenuItem ppMasukPoli;
@@ -16322,6 +16401,10 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
             TNoReg.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
             TNoRMCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),2).toString());
             TPasienCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),3).toString());
+            //CUSTOM
+            Sequel.cariIsi("select pasien.no_ktp from pasien where pasien.no_rkm_medis=?", TNikCari,tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),2).toString());
+            Sequel.cariIsi("select bridging_sep.no_sep from bridging_sep where bridging_sep.no_rawat=?", TSEPCari,tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),11).toString());
+
         }
     }
 
@@ -18498,6 +18581,7 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
         MnDataRM.add(ppResume);
         MnDataRM.add(ppRiwayat);
         MnDataRM.add(ppDeteksiDIniCorona);
+        MnDataRM.add(ppPRMJ);
         MnRMHCU.add(MnCheckListKriteriaMasukNICU);
         MnRMHCU.add(MnCheckListKriteriaMasukPICU);
         
