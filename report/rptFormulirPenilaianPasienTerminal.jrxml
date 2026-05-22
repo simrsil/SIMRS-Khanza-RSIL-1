@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 5.2.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f505995-42c1-4cc5-b34d-0896041d3a11">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -18,14 +18,15 @@
 	<parameter name="logo" class="java.io.InputStream"/>
 	<parameter name="finger" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,penilaian_pasien_terminal.tanggal,
-                    penilaian_pasien_terminal.diagnosa,penilaian_pasien_terminal.rps,penilaian_pasien_terminal.rpd,penilaian_pasien_terminal.keadaan_umum,
-                    penilaian_pasien_terminal.kesadaran,penilaian_pasien_terminal.td,penilaian_pasien_terminal.nadi,penilaian_pasien_terminal.suhu,
-                    penilaian_pasien_terminal.rr,penilaian_pasien_terminal.spo2,penilaian_pasien_terminal.skala_nyeri,penilaian_pasien_terminal.tahap_pasien_menjelang_ajal,
-                    penilaian_pasien_terminal.tanda_klinis_menjelang_kematian,penilaian_pasien_terminal.kebutuhan_spiritual_pasien,penilaian_pasien_terminal.nip,petugas.nama 
-                    from penilaian_pasien_terminal inner join reg_periksa on penilaian_pasien_terminal.no_rawat=reg_periksa.no_rawat 
-                    inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
-                    inner join petugas on penilaian_pasien_terminal.nip=petugas.nip]]>
+		<![CDATA[select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,penilaian_awal_pasien_terminal.tanggal,
+                    penilaian_awal_pasien_terminal.kegawatan_pernafasan,penilaian_awal_pasien_terminal.kehilangan_tonus_otot,penilaian_awal_pasien_terminal.nyeri,penilaian_awal_pasien_terminal.ket_nyeri,
+                    penilaian_awal_pasien_terminal.perlambatan_sirkulasi,penilaian_awal_pasien_terminal.faktor_meningkatkan_gejala_fisik,penilaian_awal_pasien_terminal.masalah_keperawatan,penilaian_awal_pasien_terminal.pelayanan_spiritual,
+                    penilaian_awal_pasien_terminal.ket_spiritual,penilaian_awal_pasien_terminal.perlu_didoakan,penilaian_awal_pasien_terminal.perlu_bimbingan_rohani,penilaian_awal_pasien_terminal.perlu_pendampingan_rohani,penilaian_awal_pasien_terminal.orang_ingin_dihubungi,
+                    penilaian_awal_pasien_terminal.ket_orang_ingin_dihubungi,penilaian_awal_pasien_terminal.hubungan_dengan_pasien,penilaian_awal_pasien_terminal.alamat_yang_dihubungi,penilaian_awal_pasien_terminal.nohp_yang_dihubungi,penilaian_awal_pasien_terminal.perawatan_lanjutan,penilaian_awal_pasien_terminal.assesmen_informasi_pasien,penilaian_awal_pasien_terminal.masalah_keperawatan_pasien,penilaian_awal_pasien_terminal.assesmen_informasi_keluarga,penilaian_awal_pasien_terminal.masalah_keperawatan_keluarga,penilaian_awal_pasien_terminal.dukungan_pelayanan,penilaian_awal_pasien_terminal.kebutuhan_altrnatif,penilaian_awal_pasien_terminal.assesmen_informasi_resiko,penilaian_awal_pasien_terminal.masalah_keperawatan_resiko,penilaian_awal_pasien_terminal.kd_dokter,dokter.nm_dokter,penilaian_awal_pasien_terminal.nip,petugas.nama,
+                    from penilaian_awal_pasien_terminal inner join reg_periksa on penilaian_awal_pasien_terminal.no_rawat=reg_periksa.no_rawat
+                    inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis
+                    inner join dokter on penilaian_awal_pasien_terminal.kd_dokter=dokter.kd_dokter
+                    inner join petugas on penilaian_awal_pasien_terminal.nip=petugas.nip]]>
 	</queryString>
 	<field name="no_rawat" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="no_rawat"/>
@@ -57,90 +58,108 @@
 		<property name="com.jaspersoft.studio.field.label" value="tanggal"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 	</field>
-	<field name="diagnosa" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="diagnosa"/>
-		<property name="com.jaspersoft.studio.field.label" value="diagnosa"/>
+	<field name="kegawatan_pernafasan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="kegawatan_pernafasan"/>
+		<property name="com.jaspersoft.studio.field.label" value="kegawatan_pernafasan"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="rps" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="rps"/>
-		<property name="com.jaspersoft.studio.field.label" value="rps"/>
+	<field name="kehilangan_tonus_otot" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="kehilangan_tonus_otot"/>
+		<property name="com.jaspersoft.studio.field.label" value="kehilangan_tonus_otot"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="rpd" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="rpd"/>
-		<property name="com.jaspersoft.studio.field.label" value="rpd"/>
+	<field name="nyeri" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nyeri"/>
+		<property name="com.jaspersoft.studio.field.label" value="nyeri"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="keadaan_umum" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="keadaan_umum"/>
-		<property name="com.jaspersoft.studio.field.label" value="keadaan_umum"/>
+	<field name="ket_nyeri" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ket_nyeri"/>
+		<property name="com.jaspersoft.studio.field.label" value="ket_nyeri"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="kesadaran" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="kesadaran"/>
-		<property name="com.jaspersoft.studio.field.label" value="kesadaran"/>
+	<field name="perlambatan_sirkulasi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="perlambatan_sirkulasi"/>
+		<property name="com.jaspersoft.studio.field.label" value="perlambatan_sirkulasi"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="td" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="td"/>
-		<property name="com.jaspersoft.studio.field.label" value="td"/>
+	<field name="aktor_meningkatkan_gejala_fisik" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="aktor_meningkatkan_gejala_fisik"/>
+		<property name="com.jaspersoft.studio.field.label" value="aktor_meningkatkan_gejala_fisik"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nadi" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="nadi"/>
-		<property name="com.jaspersoft.studio.field.label" value="nadi"/>
+	<field name="masalah_keperawatan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="masalah_keperawatan"/>
+		<property name="com.jaspersoft.studio.field.label" value="masalah_keperawatan"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="suhu" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="suhu"/>
-		<property name="com.jaspersoft.studio.field.label" value="suhu"/>
+	<field name="pelayanan_spiritual" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pelayanan_spiritual"/>
+		<property name="com.jaspersoft.studio.field.label" value="pelayanan_spiritual"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="rr" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="rr"/>
-		<property name="com.jaspersoft.studio.field.label" value="rr"/>
+	<field name="ket_spiritual" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ket_spiritual"/>
+		<property name="com.jaspersoft.studio.field.label" value="ket_spiritual"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="spo2" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="spo2"/>
-		<property name="com.jaspersoft.studio.field.label" value="spo2"/>
+	<field name="perlu_didoakan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="perlu_didoakan"/>
+		<property name="com.jaspersoft.studio.field.label" value="perlu_didoakan"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="skala_nyeri" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="skala_nyeri"/>
-		<property name="com.jaspersoft.studio.field.label" value="skala_nyeri"/>
+	<field name="perlu_bimbingan_rohani" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="perlu_bimbingan_rohani"/>
+		<property name="com.jaspersoft.studio.field.label" value="perlu_bimbingan_rohani"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="tahap_pasien_menjelang_ajal" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="tahap_pasien_menjelang_ajal"/>
-		<property name="com.jaspersoft.studio.field.label" value="tahap_pasien_menjelang_ajal"/>
+	<field name="perlu_pendampingan_rohani" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="perlu_pendampingan_rohani"/>
+		<property name="com.jaspersoft.studio.field.label" value="perlu_pendampingan_rohani"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="tanda_klinis_menjelang_kematian" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="tanda_klinis_menjelang_kematian"/>
-		<property name="com.jaspersoft.studio.field.label" value="tanda_klinis_menjelang_kematian"/>
+	<field name="orang_ingin_dihubungi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orang_ingin_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.label" value="orang_ingin_dihubungi"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="kebutuhan_spiritual_pasien" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="kebutuhan_spiritual_pasien"/>
-		<property name="com.jaspersoft.studio.field.label" value="kebutuhan_spiritual_pasien"/>
+	<field name="ket_orang_ingin_dihubungi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ket_orang_ingin_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.label" value="ket_orang_ingin_dihubungi"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="hubungan_dengan_pasien" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hubungan_dengan_pasien"/>
+		<property name="com.jaspersoft.studio.field.label" value="hubungan_dengan_pasien"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="alamat_yang_dihubungi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="alamat_yang_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.label" value="alamat_yang_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ket_orang_ingin_dihubungi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ket_orang_ingin_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.label" value="ket_orang_ingin_dihubungi"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_pasien_terminal"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field> 
 	<field name="nip" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nip"/>
 		<property name="com.jaspersoft.studio.field.label" value="nip"/>
