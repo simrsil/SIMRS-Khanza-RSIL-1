@@ -1903,7 +1903,7 @@
 		</band>
 	</title>
 	<detail>
-		<band height="493">
+		<band height="592">
 			<rectangle>
 				<reportElement x="0" y="20" width="557" height="461" uuid="e2340bcd-c5e6-4266-91c3-2cff3d067866"/>
 				<graphicElement>
