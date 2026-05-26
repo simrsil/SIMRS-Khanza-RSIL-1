@@ -44,6 +44,7 @@ import javax.swing.WindowConstants;
 /**
  *
  * @author perpustakaan
+ * CUSTOMM kebutuhan edukasi/komunikasi & perencanaan pulang
  */
 public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialog {
 
@@ -1639,7 +1640,7 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         jLabel53.setBounds(10, 70, 180, 23);
 
         TglAsuhan.setForeground(new java.awt.Color(50, 70, 50));
-        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026 10:35:39" }));
+        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-05-2026 09:48:22" }));
         TglAsuhan.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglAsuhan.setName("TglAsuhan"); // NOI18N
         TglAsuhan.setOpaque(false);
@@ -2464,16 +2465,16 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         jSeparator9.setBounds(0, 1330, 880, 1);
 
         jLabel141.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel141.setText("VIII. PENGKAJIAN RESIKO  JATUH  (SKALA HUMPTY DUMPTY)");
+        jLabel141.setText("X. PENGKAJIAN RESIKO  JATUH  (SKALA HUMPTY DUMPTY)");
         jLabel141.setName("jLabel141"); // NOI18N
         FormInput.add(jLabel141);
         jLabel141.setBounds(10, 1330, 380, 23);
 
         jLabel149.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel149.setText("IX. SKRINING GIZI (STRONG KID)");
+        jLabel149.setText("XI. SKRINING GIZI (STRONG KID)");
         jLabel149.setName("jLabel149"); // NOI18N
         FormInput.add(jLabel149);
-        jLabel149.setBounds(20, 1610, 380, 23);
+        jLabel149.setBounds(10, 1610, 380, 23);
 
         jSeparator10.setBackground(new java.awt.Color(239, 244, 234));
         jSeparator10.setForeground(new java.awt.Color(239, 244, 234));
@@ -2611,10 +2612,10 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         jSeparator11.setBounds(20, 1790, 880, 1);
 
         jLabel163.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel163.setText("X. PENGKAJIAN TINGKAT NYERI");
+        jLabel163.setText("XII. PENGKAJIAN TINGKAT NYERI");
         jLabel163.setName("jLabel163"); // NOI18N
         FormInput.add(jLabel163);
-        jLabel163.setBounds(30, 1790, 380, 23);
+        jLabel163.setBounds(10, 1790, 380, 23);
 
         jLabel164.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel164.setText("Skala FLACCS :");
@@ -3502,13 +3503,13 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         jLabel276.setBounds(70, 1030, 100, 23);
 
         jLabel277.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel277.setText("IV. KEBUTUHAN KOMUNIKASI DAN BELAJAR/EDUKASI (ORANGTUA)");
+        jLabel277.setText("VIII. KEBUTUHAN KOMUNIKASI DAN BELAJAR/EDUKASI (ORANGTUA)");
         jLabel277.setName("jLabel277"); // NOI18N
         FormInput.add(jLabel277);
         jLabel277.setBounds(10, 860, 400, 23);
 
         jLabel214.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel214.setText("IV. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
+        jLabel214.setText("IX. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
         jLabel214.setName("jLabel214"); // NOI18N
         FormInput.add(jLabel214);
         jLabel214.setBounds(10, 1100, 400, 23);
@@ -3929,10 +3930,10 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         jSeparator16.setBounds(0, 2050, 880, 1);
 
         jLabel272.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel272.setText("VIII. PERENCANAAN PULANG (DISCHARGE PLANNING)");
+        jLabel272.setText("XIII. PERENCANAAN PULANG (DISCHARGE PLANNING)");
         jLabel272.setName("jLabel272"); // NOI18N
         FormInput.add(jLabel272);
-        jLabel272.setBounds(20, 2050, 380, 23);
+        jLabel272.setBounds(10, 2050, 380, 23);
 
         InformasiPerencanaanPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ya", "Tidak" }));
         InformasiPerencanaanPulang.setName("InformasiPerencanaanPulang"); // NOI18N
@@ -3983,7 +3984,7 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         label29.setBounds(630, 2070, 130, 23);
 
         TanggalPulang.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-05-2026" }));
         TanggalPulang.setDisplayFormat("dd-MM-yyyy");
         TanggalPulang.setName("TanggalPulang"); // NOI18N
         TanggalPulang.setOpaque(false);
@@ -4114,7 +4115,7 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-05-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -4128,7 +4129,7 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "25-05-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -5271,8 +5272,8 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
                 kebutuhanedukasi = "";
                 ps = koneksi.prepareStatement(
                         "select master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi,master_kebutuhan_edukasi_komunikasi.kebutuhan_edukasi from master_kebutuhan_edukasi_komunikasi "
-                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
-                        + "where penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_kebutuhan_edukasi.kd_kebutuhan_edukasi");
+                        + "inner join penilaian_awal_keperawatan_ralan_bayi_kebutuhan_edukasi on penilaian_awal_keperawatan_ralan_bayi_kebutuhan_edukasi.kd_kebutuhan_edukasi=master_kebutuhan_edukasi_komunikasi.kd_kebutuhan_edukasi "
+                        + "where penilaian_awal_keperawatan_ralan_bayi_kebutuhan_edukasi.no_rawat=? order by penilaian_awal_keperawatan_ralan_bayi_kebutuhan_edukasi.kd_kebutuhan_edukasi");
                 try {
                     ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                     rs = ps.executeQuery();
@@ -5298,8 +5299,8 @@ public final class RMPenilaianAwalKeperawatanBayiAnak extends javax.swing.JDialo
                 kebutuhanedukasi = "";
                 ps = koneksi.prepareStatement(
                         "select master_rencana_edukasi_komunikasi.kd_rencana_edukasi,master_rencana_edukasi_komunikasi.rencana_edukasi from master_rencana_edukasi_komunikasi "
-                        + "inner join penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi on penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi=master_rencana_edukasi_komunikasi.kd_rencana_edukasi "
-                        + "where penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.no_rawat=? order by penilaian_awal_keperawatan_kebidanan_ralan_rencana_edukasi.kd_rencana_edukasi");
+                        + "inner join penilaian_awal_keperawatan_ralan_bayi_rencana_edukasi on penilaian_awal_keperawatan_ralan_bayi_rencana_edukasi.kd_rencana_edukasi=master_rencana_edukasi_komunikasi.kd_rencana_edukasi "
+                        + "where penilaian_awal_keperawatan_ralan_bayi_rencana_edukasi.no_rawat=? order by penilaian_awal_keperawatan_ralan_bayi_rencana_edukasi.kd_rencana_edukasi");
                 try {
                     ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                     rs = ps.executeQuery();
