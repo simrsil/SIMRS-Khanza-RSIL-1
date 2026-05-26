@@ -1,6 +1,7 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
+ * CUSTOMM RSI FULL
  */
 
 
@@ -1585,57 +1586,85 @@ public final class RMPenilaianPasienTerminal extends javax.swing.JDialog {
             try{
                 htmlContent = new StringBuilder();
                 htmlContent.append(                             
-                    "<tr class='isi'>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.R.M.</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>JK</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Uraian Penyakit/Kondisi Pasien Saat Ini</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Riwayat Penyakit/Kondisi Sebelumnya</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Keadaan Umum</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kesadaran</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TD(mmHg)</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nadi(x/menit)</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Suhu(°C)</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>RR(x/menit)</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>SpO2(%)</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Skala Nyeri</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tahap Menjelang Ajal</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanda-tanda Klinis Menjelang Kematian</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebutuhan Spiritual Pasien/Keluarga</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>NIP</b></td>"+
-                        "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Petugas</b></td>"+
-                    "</tr>"
+                        "<tr class='isi'>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Rawat</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.R.M.</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nama Pasien</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tgl.Lahir</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>JK</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Tanggal</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kegawatan Pernafasan</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kehilangan Tanus Otot</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Nyeri</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Keterangan Nyeri</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Perlambatan Sirkulasi</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Faktor Yang Meningkatkan Gejala Fisik</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Masalah Keperawatan Pasien</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Pelayanan Spiritual</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Ket.Pelayanan Spiritual</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Perlu Didoakan</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Perlu Bimbingan Rohani</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Perlu Pendampingan Rohani</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Orang Yang Ingin Dihubungi</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Ket Yang Ingin Dihubungi</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Hubungan Dengan Pasien</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Alamat Yang Dihubungi</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>No.Hp Yang Dihubungi</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Perawatan Selanjutnya Dirumah</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Reaksi Pasien Tas Penyakitnya</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Masalah Keperawatan</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Reaksi Keluarga</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Masalah Keperawatan</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Dukungan Atau Kelonggaran Pelayanan</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kebutuhan Akan Alternatif/Tingkat Pelayann</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Faktor Resiko Bagi Keluarga</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Masalah Keperawatan Resiko</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>NIP</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Petugas</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kode Dokter</b></td>"
+                        + "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Dokter</b></td>"
+                        + "</tr>"
                 );
                 for (i = 0; i < tabMode.getRowCount(); i++) {
                     htmlContent.append(
-                        "<tr class='isi'>"+
-                           "<td valign='top'>"+tbObat.getValueAt(i,0).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,1).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,2).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,3).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,4).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,5).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,6).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,7).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,8).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,9).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,10).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,11).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,12).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,13).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,14).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,15).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,16).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,17).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,18).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,19).toString()+"</td>"+
-                            "<td valign='top'>"+tbObat.getValueAt(i,20).toString()+"</td>"+ 
-                            "<td valign='top'>"+tbObat.getValueAt(i,21).toString()+"</td>"+
-                        "</tr>");
+                            "<tr class='isi'>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 0).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 1).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 2).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 3).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 4).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 5).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 6).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 7).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 8).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 9).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 10).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 11).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 12).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 13).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 14).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 15).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 16).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 17).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 18).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 19).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 20).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 21).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 22).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 23).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 24).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 25).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 26).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 27).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 28).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 29).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 30).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 31).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 32).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 33).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 34).toString() + "</td>"
+                            + "<td valign='top'>" + tbObat.getValueAt(i, 35).toString() + "</td>"
+                            + "</tr>");
                 }
                 LoadHTML.setText(
                     "<html>"+
