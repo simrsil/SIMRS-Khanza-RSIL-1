@@ -1566,49 +1566,50 @@
 		<property name="com.jaspersoft.studio.field.tree.path" value="pasien"/>
 	</field>
 	<detail>
-		<band height="50">
-			<textField>
-				<reportElement positionType="Float" x="0" y="36" width="555" height="14" uuid="bf7d158e-0e90-415a-aafb-0c77ec300b80"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA["E-mail : "+$P{emailrs}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="0" y="26" width="555" height="14" uuid="69e906b1-20af-4ad2-86a4-4ed1a352d42f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{kontakrs}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="0" y="1" width="555" height="17" uuid="38db2163-298d-41aa-9fa3-e2ba2baf0afd"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="12"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{namars}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="0" y="15" width="555" height="14" uuid="09b1d62b-c413-412c-8421-28a16d95ff50"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{alamatrs}+", "+$P{kotars}+", "+$P{propinsirs}]]></textFieldExpression>
-			</textField>
-			<image scaleImage="FillFrame" isUsingCache="true" onErrorType="Blank">
-				<reportElement positionType="Float" x="1" y="2" width="45" height="45" uuid="c0837649-0cb2-43a8-babb-d9a52c5a7642"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
+		<band height="71">
 			<line>
-				<reportElement positionType="Float" x="0" y="48" width="557" height="1" uuid="7de20fb0-220d-4445-9fca-62a146ea1759"/>
+				<reportElement positionType="Float" x="1" y="65" width="557" height="1" uuid="7de20fb0-220d-4445-9fca-62a146ea1759"/>
 				<graphicElement>
 					<pen lineWidth="2.0" lineStyle="Double"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement x="165" y="49" width="315" height="13" uuid="f44add1e-4de1-4f2d-8c2f-8926513037f9"/>
+				<textElement>
+					<font fontName="Tahoma" size="9"/>
+				</textElement>
+				<text><![CDATA[Website : www.rsilumajang.co.id E-mail : rsi_lmj@yahoo.com]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="37" y="2" width="54" height="59" uuid="73a98b79-946b-478d-8186-147fa0d3271d"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="141" y="14" width="379" height="22" forecolor="#009B4D" uuid="13004ef2-cee5-401d-90f8-d15219ea938e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUMAH SAKIT ISLAM LUMAJANG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="36" width="402" height="13" uuid="f1d2b80a-dea6-4c8d-9661-e8e57b9e9cf4"/>
+				<textElement>
+					<font fontName="Tahoma" size="9"/>
+				</textElement>
+				<text><![CDATA[JL Kyai Muksin No.19, 67312, Telp : 0334-887999, 893535 (hunting), Fax : 0334-890425]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="2" width="270" height="16" uuid="6a107729-6f59-4348-9d9c-74469e032091">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[YAYASAN RUMAH SAKIT ISLAM LUMAJANG]]></text>
+			</staticText>
 		</band>
 		<band height="93">
 			<line>
@@ -5565,7 +5566,7 @@
 					<font fontName="Tahoma" size="8" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[VI. PERENCANAAN KEBUTUHAN EDUKASI/KOMUNIKASI]]></text>
+				<text><![CDATA[VIII. PERENCANAAN KEBUTUHAN EDUKASI/KOMUNIKASI]]></text>
 			</staticText>
 			<line>
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="257" y="13" width="1" height="80" uuid="803584b4-514c-4e3f-a316-047d4fecc16a">
@@ -5834,7 +5835,7 @@
 					<font fontName="Tahoma" size="8" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[VIII. PERENCANAAN PULANG (DISCHARGE PLANNING)]]></text>
+				<text><![CDATA[IX. PERENCANAAN PULANG (DISCHARGE PLANNING)]]></text>
 			</staticText>
 			<line>
 				<reportElement positionType="Float" x="1" y="95" width="556" height="1" uuid="d81c2b04-4c90-44fe-a4d3-e75368011ebf">

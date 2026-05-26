@@ -8,7 +8,11 @@
   sampai umur 50 tahun sampai 200 turunan. Ya Alloh maafkan kami 
   karena telah berdoa buruk, semua ini kami lakukan karena kami ti
   dak pernah rela karya kami dibajak tanpa ijin.
+
+    * CUSTOMM penambahan keterbatasan kognitif,hambatan emosional,keyakinan & nilai,motivasi
+    * CUSTOMM penambahan perencanaan kebutuhan edukasi/komunkasi
  */
+
 package rekammedis;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -1902,7 +1906,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         CaraMasuk.setBounds(79, 100, 105, 23);
 
         TglAsuhan.setForeground(new java.awt.Color(50, 70, 50));
-        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026 10:58:40" }));
+        TglAsuhan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "24-04-2026 10:04:01" }));
         TglAsuhan.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglAsuhan.setName("TglAsuhan"); // NOI18N
         TglAsuhan.setOpaque(false);
@@ -2036,7 +2040,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         jSeparator11.setBounds(10, 2720, 880, 1);
 
         jLabel271.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel271.setText("VII. PENGKAJIAN TINGKAT NYERI (SKALA NIPS)");
+        jLabel271.setText("VIII. PENGKAJIAN TINGKAT NYERI (SKALA NIPS)");
         jLabel271.setName("jLabel271"); // NOI18N
         FormInput.add(jLabel271);
         jLabel271.setBounds(20, 2720, 380, 23);
@@ -5082,7 +5086,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         jSeparator5.setBounds(0, 1810, 880, 1);
 
         jLabel214.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel214.setText("IV. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
+        jLabel214.setText("V. ASESMEN KEBUTUHAN EDUKASI DAN KOMUNIKASI");
         jLabel214.setName("jLabel214"); // NOI18N
         FormInput.add(jLabel214);
         jLabel214.setBounds(20, 2070, 400, 23);
@@ -5367,7 +5371,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         jSeparator7.setBounds(10, 2320, 880, 1);
 
         jLabel236.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel236.setText("V. SKRINING GIZI");
+        jLabel236.setText("VI. SKRINING GIZI");
         jLabel236.setName("jLabel236"); // NOI18N
         FormInput.add(jLabel236);
         jLabel236.setBounds(20, 2320, 380, 23);
@@ -5496,7 +5500,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         jSeparator8.setBounds(10, 2460, 880, 1);
 
         jLabel242.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel242.setText("VI. PENGKAJIAN RISIKO JATUH (SKALA HUMPTY DUMPTY)");
+        jLabel242.setText("VII. PENGKAJIAN RISIKO JATUH (SKALA HUMPTY DUMPTY)");
         jLabel242.setName("jLabel242"); // NOI18N
         FormInput.add(jLabel242);
         jLabel242.setBounds(20, 2460, 380, 23);
@@ -5867,7 +5871,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         jSeparator13.setBounds(10, 2920, 880, 1);
 
         jLabel272.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel272.setText("VIII. PERENCANAAN PULANG (DISCHARGE PLANNING)");
+        jLabel272.setText("IX. PERENCANAAN PULANG (DISCHARGE PLANNING)");
         jLabel272.setName("jLabel272"); // NOI18N
         FormInput.add(jLabel272);
         jLabel272.setBounds(30, 2920, 380, 23);
@@ -5921,7 +5925,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         label29.setBounds(640, 2940, 130, 23);
 
         TanggalPulang.setForeground(new java.awt.Color(50, 70, 50));
-        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        TanggalPulang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "24-04-2026" }));
         TanggalPulang.setDisplayFormat("dd-MM-yyyy");
         TanggalPulang.setName("TanggalPulang"); // NOI18N
         TanggalPulang.setOpaque(false);
@@ -6360,7 +6364,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "24-04-2026" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -6374,7 +6378,7 @@ public final class RMPenilaianAwalKeperawatanRanapNeonatus extends javax.swing.J
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "06-04-2026" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "24-04-2026" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
