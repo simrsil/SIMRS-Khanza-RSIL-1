@@ -47355,7 +47355,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         
         btnAuditBundlePLABSI = new widget.ButtonBig();
         btnAuditBundlePLABSI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/5875848_blood_cell_disease_infect_lab_icon.png"))); 
-        btnAuditBundlePLABSI.setText("Audit Bundle PLABSI");
+        btnAuditBundlePLABSI.setText("Audit Bundle CLABSI");
         btnAuditBundlePLABSI.setIconTextGap(0);
         btnAuditBundlePLABSI.setName("btnAuditBundlePLABSI");
         btnAuditBundlePLABSI.setPreferredSize(new java.awt.Dimension(200, 90));
