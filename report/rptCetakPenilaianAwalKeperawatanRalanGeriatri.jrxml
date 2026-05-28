@@ -600,11 +600,10 @@
 		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_awal_keperawatan_ralan_geriatri"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="tanggal_pulang" class="java.lang.String">
+	<field name="tanggal_pulang" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="tanggal_pulang"/>
 		<property name="com.jaspersoft.studio.field.label" value="tanggal_pulang"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="penilaian_awal_keperawatan_ralan_geriatri"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pasien"/>
 	</field>
 	<field name="kondisi_saat_pulang" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="kondisi_saat_pulang"/>
@@ -2590,7 +2589,7 @@
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Perencanaan Pulang : "+new SimpleDateFormat("dd/MM/yyyy ").format($F{tanggal_pulang})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Perencanaan Pulang :"+" "+$F{tanggal_pulang}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="14" y="914" width="552" height="11" uuid="ce7cf451-68c7-4688-8f66-2a4508c04aea">
